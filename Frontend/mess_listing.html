@@ -4,50 +4,31 @@
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Search Mess</title>
+   <title>All Mess Listings</title>
+
    <!-- font awesome cdn link  -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
 
    <!-- custom css file link  -->
    <link rel="stylesheet" href="css/style.css">
 
-   <style>
-      .container {
-         display: flex;
-         gap: 20px;
-         padding: 20px;
-         background: url('./images/bg1.jpg') no-repeat;
-         background-size: cover;
-         background-position: center;
-         min-height: 90vh;
-      }
-      .filter-form {
-         flex: 1;
-         background-color: rgba(255, 255, 255, 0.5); /* Transparent background */
-         padding: 20px;
-         border-radius: 8px;
-         box-shadow: var(--box-shodow);
-      }
-      .map-container {
-         flex: 1.5;
-         height: 500px;
-         background-color: #e0e0e0;
-         border-radius: 8px;
-      }
-   </style>
 </head>
 <body>
    
 <!-- header section starts  -->
+
 <header class="header">
+
    <nav class="navbar nav-1">
       <section class="flex">
          <a href="home.html" class="logo"><i class="fas fa-house"></i>FindRoom</a>
       </section>
    </nav>
+
    <nav class="navbar nav-2">
       <section class="flex">
          <div id="menu-btn" class="fas fa-bars"></div>
+
          <div class="menu">
             <ul>
                <li><a href="#">rent<i class="fas fa-angle-down"></i></a>
@@ -84,50 +65,19 @@
          </ul>
       </section>
    </nav>
+
 </header>
+
 <!-- header section ends -->
 
-<!-- Mess Facilities Search -->
-<div class="container">
-   <form action="" method="post" class="filter-form">
-      <h3>Find Mess Facilities</h3>
-      <div class="flex">
-         <div class="box">
-            <p>Enter location <span>*</span></p>
-            <input type="text" name="mess-location" required maxlength="50" placeholder="enter city name" class="input">
-         </div>
-         <div class="box">
-            <p>Meal Type <span>*</span></p>
-            <select name="meal-type" class="input" required>
-               <option value="veg">Veg</option>
-               <option value="non-veg">Non-Veg</option>
-               <option value="both">Both</option>
-            </select>
-         </div>
-         <div class="box">
-            <p>Maximum Budget <span>*</span></p>
-            <select name="mess-budget" class="input" required>
-               <option value="1000">1k</option>
-               <option value="2000">2k</option>
-               <option value="3000">3k</option>
-               <option value="5000">5k</option>
-               <option value="7000">7k</option>
-               <option value="10000">10k</option>
-            </select>
-         </div>
-      </div>
-      <input type="submit" value="Search Mess" name="search-mess" class="btn">
-   </form>
-   <div class="map-container" id="map">
-      <!-- Google Maps will be embedded here -->
-   </div>
-</div>
-
-
+<!-- listings section starts  -->
 
 <section class="listings">
-   <h1 class="heading">Searched Results</h1>
+
+   <h1 class="heading">all Mess</h1>
+
    <div class="box-container">
+
       <div class="box">
          <div class="admin">
             <h3>S</h3>
@@ -197,50 +147,114 @@
          <a href="view_property.html" class="btn">Take a look</a>
       </div>
 
-   </div>
-   <div style="margin-top: 2rem; text-align:center;">
-      <a href="mess_listing.html" class="inline-btn">view all</a>
-   </div>
+      <div class="box">
+         <div class="admin">
+            <h3>S</h3>
+            <div>
+               <p>Shri. Sadashiv Sahasrabuddhe</p>
+               <span>10-11-2022</span>
+            </div>
+         </div>
+         <div class="thumb">
+            <p class="total-images"><i class="far fa-image"></i><span>4</span></p>
+            <form action="" method="post" class="save">
+               <button type="submit" name="save" class="far fa-heart"></button>
+            </form>
+            <img src="images/annapurna.webp" alt="">
+         </div>
+         <h3 class="name">Annapurna Khanaval</h3>
+         <p class="location"><i class="fas fa-map-marker-alt"></i><span>Sadashiv Peth, Pune - 411 005</span></p>
+         <div class="flex">
+            <p><i class="fas fa-maximize"></i><span>Pure Veg</span></p>
+         </div>
+         <a href="view_property.html" class="btn">Take A Look</a>
+      </div>
+
+      <div class="box">
+        <div class="admin">
+           <h3>S</h3>
+           <div>
+              <p>Shankar Patil</p>
+              <span>10-11-2022</span>
+           </div>
+        </div>
+        <div class="thumb">
+           <p class="total-images"><i class="far fa-image"></i><span>4</span></p>
+           <form action="" method="post" class="save">
+              <button type="submit" name="save" class="far fa-heart"></button>
+           </form>
+           <img src="images/vahini.avif" alt="">
+        </div>
+        <h3 class="name">Vahini's Mess</h3>
+        <p class="location"><i class="fas fa-map-marker-alt"></i><span>Aamchi Colony, Kothrud - 411 006</span></p>
+        <div class="flex">
+           <p><i class="fas fa-maximize"></i><span>veg/non-veg</span></p>
+        </div>
+        <a href="view_property.html" class="btn">Take A Look</a>
+     </div>
+
+     <div class="box">
+        <div class="admin">
+           <h3>S</h3>
+           <div>
+              <p>Soham Ingawale</p>
+              <span>10-11-2022</span>
+           </div>
+        </div>
+        <div class="thumb">
+           <p class="total-images"><i class="far fa-image"></i><span>4</span></p>
+           <form action="" method="post" class="save">
+              <button type="submit" name="save" class="far fa-heart"></button>
+           </form>
+           <img src="images/Ingawale.avif" alt="">
+        </div>
+        <h3 class="name">Ingawale Khanaval</h3>
+        <p class="location"><i class="fas fa-map-marker-alt"></i><span>Dnyaneshwar Paduka Chowk, FC Road, Pune - 411004</span></p>
+        <div class="flex">
+           <p><i class="fas fa-maximize"></i><span>veg/nong-veg</span></p>
+        </div>
+        <a href="view_property.html" class="btn">Take A Look</a>
+     </div>
 
 </section>
 
+<!-- listings section ends -->
 <!-- footer section starts  -->
+
 <footer class="footer">
    <section class="flex">
+
       <div class="box">
          <a href="tel:1234567890"><i class="fas fa-phone"></i><span>123456789</span></a>
          <a href="tel:1112223333"><i class="fas fa-phone"></i><span>1112223333</span></a>
          <a href="mailto:abc@gmail.com"><i class="fas fa-envelope"></i><span>abc@gmail.com</span></a>
          <a href="#"><i class="fas fa-map-marker-alt"></i><span>Pune, india - 4110045</span></a>
       </div>
+
       <div class="box">
          <a href="home.html"><span>home</span></a>
          <a href="about.html"><span>about</span></a>
          <a href="contact.html"><span>contact</span></a>
          <a href="#"><span>saved accomodation</span></a>
       </div>
+
       <div class="box">
          <a href="#"><span>facebook</span><i class="fab fa-facebook-f"></i></a>
          <a href="#"><span>twitter</span><i class="fab fa-twitter"></i></a>
          <a href="#"><span>linkedin</span><i class="fab fa-linkedin"></i></a>
          <a href="#"><span>instagram</span><i class="fab fa-instagram"></i></a>
+
       </div>
+
    </section>
+
 </footer>
+
 <!-- footer section ends -->
+
 
 <!-- custom js file link  -->
 <script src="js/script.js"></script>
 
-<script>
-   // Initialize Google Maps
-   function initMap() {
-      const map = new google.maps.Map(document.getElementById("map"), {
-         center: { lat: 18.5204, lng: 73.8567 }, // Pune coordinates
-         zoom: 12,
-      });
-   }
-</script>
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
 </body>
 </html>
