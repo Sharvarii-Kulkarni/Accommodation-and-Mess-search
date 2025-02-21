@@ -286,7 +286,34 @@
 
 
 <!-- custom js file link  -->
-<script src="js/script.js"></script>
+<script>
+   document.addEventListener("DOMContentLoaded", function () {
+       fetch("http://127.0.0.1:5000/accommodations")
+           .then(response => response.json())
+           .then(data => {
+               const listingsContainer = document.querySelector(".box-container"); // Update with actual class
+               listingsContainer.innerHTML = ""; // Clear old listings
+
+               data.forEach(accommodation => {
+                   const listing = `
+                       <div class="box">
+                           <div class="thumb">
+                               <img src="${accommodation.image_url}" alt="${accommodation.name}">
+                           </div>
+                           <h3 class="name">${accommodation.name}</h3>
+                           <p class="location"><i class="fas fa-map-marker-alt"></i> ${accommodation.location}</p>
+                           <p class="type">Type: ${accommodation.type}</p>
+                           <p class="price">Price: ₹${accommodation.price}</p>
+                           <p class="description">${accommodation.description}</p>
+                       </div>
+                   `;
+                   listingsContainer.innerHTML += listing;
+               });
+           })
+           .catch(error => console.error("Error fetching accommodations:", error));
+   });
+</script>
+
 
 </body>
 </html>

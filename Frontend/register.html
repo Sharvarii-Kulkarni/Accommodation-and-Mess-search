@@ -73,17 +73,15 @@
 <!-- register section starts  -->
 
 <section class="form-container">
-
-   <form action="" method="post">
-      <h3>create an account!</h3>
-      <input type="tel" name="name" required maxlength="50" placeholder="enter your name" class="box">
-      <input type="email" name="email" required maxlength="50" placeholder="enter your email" class="box">
-      <input type="password" name="pass" required maxlength="20" placeholder="enter your password" class="box">
-      <input type="password" name="c_pass" required maxlength="20" placeholder="confirm your password" class="box">
+   <form id="register-form"> <!-- ✅ Added id="register-form" -->
+      <h3>Create an Account!</h3>
+      <input type="text" id="name" required maxlength="50" placeholder="Enter your name" class="box">
+      <input type="email" id="email" required maxlength="50" placeholder="Enter your email" class="box">
+      <input type="password" id="password" required maxlength="20" placeholder="Enter your password" class="box">
+      <input type="password" id="confirm_password" required maxlength="20" placeholder="Confirm your password" class="box">
       <p>Already have an account? <a href="login.html">Login now</a></p>
-      <input type="submit" value="register now" name="submit" class="btn">
+      <input type="submit" value="Register Now" class="btn">
    </form>
-
 </section>
 
 <!-- register section ends -->
@@ -122,7 +120,41 @@
 
 <!-- footer section ends -->
 <!-- custom js file link  -->
-<script src="js/script.js"></script>
+<script>
+   document.addEventListener("DOMContentLoaded", function () {
+       const registerForm = document.querySelector("#register-form");
+
+       registerForm.addEventListener("submit", function (event) {
+           event.preventDefault(); // Prevent form from reloading
+
+           const name = document.querySelector("#name").value;
+           const email = document.querySelector("#email").value;
+           const password = document.querySelector("#password").value;
+           const confirmPassword = document.querySelector("#confirm_password").value;
+
+           if (password !== confirmPassword) {
+               alert("Passwords do not match!");
+               return;
+           }
+
+           fetch("http://127.0.0.1:5000/register", {
+               method: "POST",
+               headers: { "Content-Type": "application/json" },
+               body: JSON.stringify({ name, email, password })
+           })
+           .then(response => response.json())
+           .then(data => {
+               if (data.message === "User registered successfully!") {
+                   alert("Registration successful! Redirecting to login...");
+                   window.location.href = "login.html"; // Redirect to login
+               } else {
+                   alert("Error: " + data.error);
+               }
+           })
+           .catch(error => console.error("Error:", error));
+       });
+   });
+</script>
 
 </body>
 </html>

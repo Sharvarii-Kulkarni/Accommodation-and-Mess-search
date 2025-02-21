@@ -73,15 +73,13 @@
 <!-- login section starts  -->
 
 <section class="form-container">
-
-   <form action="" method="post">
+   <form id="login-form">
       <h3>welcome back!</h3>
-      <input type="email" name="email" required maxlength="50" placeholder="enter your email" class="box">
-      <input type="password" name="pass" required maxlength="20" placeholder="enter your password" class="box">
-      <p>don't have an account? <a href="register.html">Register New</a></p>
-      <input type="submit" value="login now" name="submit" class="btn">
+      <input type="email" id="email" required maxlength="50" placeholder="Enter your email" class="box">
+      <input type="password" id="password" required maxlength="20" placeholder="Enter your password" class="box">
+      <p>Don't have an account? <a href="register.html">Register New</a></p>
+      <input type="submit" value="Login Now" class="btn">
    </form>
-
 </section>
 
 <!-- login section ends -->
@@ -123,7 +121,36 @@
 
 
 <!-- custom js file link  -->
-<script src="js/script.js"></script>
+<script>
+   document.addEventListener("DOMContentLoaded", function () {
+       const loginForm = document.querySelector("#login-form");
+
+       loginForm.addEventListener("submit", function (event) {
+           event.preventDefault(); // Prevent page reload
+
+           const email = document.querySelector("#email").value;
+           const password = document.querySelector("#password").value;
+
+           fetch("http://127.0.0.1:5000/login", {
+               method: "POST",
+               headers: { "Content-Type": "application/json" },
+               body: JSON.stringify({ email, password })
+           })
+           .then(response => response.json())
+           .then(data => {
+               if (data.message === "Login successful") {
+                   alert("Login successful! Redirecting...");
+                   localStorage.setItem("user_id", data.user_id); // Save user ID for session
+                   window.location.href = "home.html"; // Redirect to home page
+               } else {
+                   alert("Invalid credentials. Try again!");
+               }
+           })
+           .catch(error => console.error("Error:", error));
+       });
+   });
+</script>
+
 
 </body>
 </html>

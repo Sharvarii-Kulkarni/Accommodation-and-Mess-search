@@ -236,7 +236,30 @@
 <!-- footer section ends -->
 
 <!-- custom js file link  -->
-<script src="js/script.js"></script>
+<script>
+   document.addEventListener("DOMContentLoaded", function () {
+       const userId = localStorage.getItem("user_id");
+
+       if (!userId) {
+           alert("You are not logged in!");
+           window.location.href = "login.html"; // Redirect to login page
+       }
+
+       fetch(`http://127.0.0.1:5000/get_user/${userId}`)
+           .then(response => response.json())
+           .then(data => {
+               if (data.error) {
+                   alert("Error fetching user details!");
+               } else {
+                   document.querySelector("#username").textContent = data.name;
+               }
+           })
+           .catch(error => console.error("Error:", error));
+   });
+</script>
+
+<h2>Welcome, <span id="username"></span>!</h2>
+
 
 </body>
 </html>
