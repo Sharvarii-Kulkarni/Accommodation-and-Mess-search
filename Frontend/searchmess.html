@@ -81,6 +81,13 @@
                   <li><a href="register.html">register</a></li>
                </ul>
             </li>
+            <li class="profile-dropdown">
+               <a href="#"><i class="fas fa-user-circle"></i> Profile <i class="fas fa-angle-down"></i></a>
+               <ul class="profile-menu">
+                  <li id="user-info">Not logged in</li>
+                  <li><a href="#" id="logout-btn">Logout</a></li>
+               </ul>
+            </li>
          </ul>
       </section>
    </nav>
@@ -89,24 +96,25 @@
 
 <!-- Mess Facilities Search -->
 <div class="container">
-   <form action="" method="post" class="filter-form">
+   <form id="mess-search-form" class="filter-form">
       <h3>Find Mess Facilities</h3>
       <div class="flex">
          <div class="box">
             <p>Enter location <span>*</span></p>
-            <input type="text" name="mess-location" required maxlength="50" placeholder="enter city name" class="input">
+            <input type="text" id="mess-location" name="mess-location" required maxlength="50" placeholder="enter city name" class="input">
          </div>
          <div class="box">
             <p>Meal Type <span>*</span></p>
-            <select name="meal-type" class="input" required>
-               <option value="veg">Veg</option>
-               <option value="non-veg">Non-Veg</option>
-               <option value="both">Both</option>
+            <select id="meal-type" name="meal-type" class="input" required>
+               <option value="pure veg">Pure Veg</option>
+               <option value="veg/non-veg">Veg/Non-Veg</option>
+               <option value="both">both</option>
             </select>
+            
          </div>
          <div class="box">
             <p>Maximum Budget <span>*</span></p>
-            <select name="mess-budget" class="input" required>
+            <select id="mess-budget" name="mess-budget" class="input" required>
                <option value="1000">1k</option>
                <option value="2000">2k</option>
                <option value="3000">3k</option>
@@ -116,92 +124,19 @@
             </select>
          </div>
       </div>
-      <input type="submit" value="Search Mess" name="search-mess" class="btn">
+      <button type="submit" id="mess-search-btn" class="btn">Search Mess</button>
    </form>
+
    <div class="map-container" id="map">
       <!-- Google Maps will be embedded here -->
    </div>
 </div>
 
-
-
 <section class="listings">
    <h1 class="heading">Searched Results</h1>
-   <div class="box-container">
-      <div class="box">
-         <div class="admin">
-            <h3>S</h3>
-            <div>
-               <p>Sharvari Kulkarni</p>
-               <span>10-11-2022</span>
-            </div>
-         </div>
-         <div class="thumb">
-            <p class="total-images"><i class="far fa-image"></i><span>4</span></p>
-            <form action="" method="post" class="save">
-               <button type="submit" name="save" class="far fa-heart"></button>
-            </form>
-            <img src="images/sugran.jpg" alt="">
-         </div>
-         <h3 class="name">Sugaran Khanaval</h3>
-         <p class="location"><i class="fas fa-map-marker-alt"></i><span>24/4 Sukanta colony, Kothrud, Pune - 411 004</span></p>
-         <div class="flex">
-            <p><i class="fas fa-maximize"></i><span><br>Pure Veg</span></p>
-         </div>
-         <a href="view_property.html" class="btn">Take a look</a>
-      </div>
-
-      <div class="box">
-         <div class="admin">
-            <h3>S</h3>
-            <div>
-               <p>Shri. Vishwajeet Dongare</p>
-               <span>10-11-2022</span>
-            </div>
-         </div>
-         <div class="thumb">
-            <p class="total-images"><i class="far fa-image"></i><span>4</span></p>
-            <form action="" method="post" class="save">
-               <button type="submit" name="save" class="far fa-heart"></button>
-            </form>
-            <img src="images/fcMess.jpg" alt="">
-         </div>
-         <h3 class="name">Dongare Mess</h3>
-         <p class="location"><i class="fas fa-map-marker-alt"></i><span>Fergusson college, Shivajinagar, Pune - 411 004</span></p>
-         <div class="flex">
-            <p><i class="fas fa-maximize"></i><span><br>Veg/Non-Veg</span></p>
-         </div>
-         <a href="view_property.html" class="btn">Take a look</a>
-      </div>
-
-      <div class="box">
-         <div class="admin">
-            <h3>V</h3>
-            <div>
-               <p>Vasundhara Yadav</p>
-               <span>10-11-2022</span>
-            </div>
-         </div>
-         <div class="thumb">
-            <p class="total-images"><i class="far fa-image"></i><span>4</span></p>
-            <form action="" method="post" class="save">
-               <button type="submit" name="save" class="far fa-heart"></button>
-            </form>
-            <img src="images/Yadav.jpg" alt="">
-         </div>
-         <h3 class="name">Yadav Khanaval aani Alpopahar</h3>
-         <p class="location"><i class="fas fa-map-marker-alt"></i><span>707, Model Colony, Shivajinagar - 411 004</span></p>
-         <div class="flex">
-            <p><i class="fas fa-maximize"></i><span><br>Pure Veg</span></p>
-         </div>
-         <a href="view_property.html" class="btn">Take a look</a>
-      </div>
-
+   <div class="box-container" id="mess-search-results">
+      <!-- Mess search results will be displayed here dynamically -->
    </div>
-   <div style="margin-top: 2rem; text-align:center;">
-      <a href="mess_listing.html" class="inline-btn">view all</a>
-   </div>
-
 </section>
 
 <!-- footer section starts  -->

@@ -59,6 +59,13 @@
                   <li><a href="register.html">register</a></li>
                </ul>
             </li>
+            <li class="profile-dropdown">
+               <a href="#"><i class="fas fa-user-circle"></i> Profile <i class="fas fa-angle-down"></i></a>
+               <ul class="profile-menu">
+                  <li id="user-info">Not logged in</li>
+                  <li><a href="#" id="logout-btn">Logout</a></li>
+               </ul>
+            </li>            
          </ul>
       </section>
    </nav>
@@ -236,27 +243,49 @@
 <!-- footer section ends -->
 
 <!-- custom js file link  -->
-<script>
+<!-- <script>
    document.addEventListener("DOMContentLoaded", function () {
        const userId = localStorage.getItem("user_id");
+       const userInfo = document.querySelector("#user-info"); 
+       const usernameDisplay = document.querySelector("#username"); 
+       const logoutBtn = document.querySelector("#logout-btn");
 
-       if (!userId) {
-           alert("You are not logged in!");
-           window.location.href = "login.html"; // Redirect to login page
+       // Fetch user details when the page loads
+       if (userId) {
+           fetch(`http://127.0.0.1:5000/get_user/${userId}`)
+               .then(response => response.json())
+               .then(data => {
+                   if (data.error) {
+                       userInfo.textContent = "Error fetching user";
+                   } else {
+                       userInfo.innerHTML = `<strong>${data.name}</strong><br>${data.email}`;
+                       if (usernameDisplay) {
+                           usernameDisplay.textContent = data.name;
+                       }
+                   }
+               })
+               .catch(error => {
+                   console.error("Error fetching user:", error);
+                   userInfo.textContent = "Error loading user";
+               });
+       } else {
+           userInfo.textContent = "Not logged in";
        }
 
-       fetch(`http://127.0.0.1:5000/get_user/${userId}`)
-           .then(response => response.json())
-           .then(data => {
-               if (data.error) {
-                   alert("Error fetching user details!");
-               } else {
-                   document.querySelector("#username").textContent = data.name;
-               }
-           })
-           .catch(error => console.error("Error:", error));
+       // Logout functionality
+       if (logoutBtn) {
+           logoutBtn.addEventListener("click", function (event) {
+               event.preventDefault();
+               localStorage.removeItem("user_id"); // Clear session
+               alert("Logged out successfully!");
+               window.location.href = "login.html"; // Redirect to login
+           });
+       }
    });
-</script>
+</script> -->
+
+
+<script src="js/script.js"></script>
 
 <h2>Welcome, <span id="username"></span>!</h2>
 

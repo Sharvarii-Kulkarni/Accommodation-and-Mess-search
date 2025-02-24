@@ -21,6 +21,7 @@ class Accommodation(db.Model):
     image_url = db.Column(db.Text)
 
 class MessService(db.Model):
+    __tablename__ = "mess_service" 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
     location = db.Column(db.Text, nullable=False)
@@ -30,6 +31,7 @@ class MessService(db.Model):
     image_url = db.Column(db.Text)
 
 class SavedListing(db.Model):
+    __tablename__ = "saved_listing" 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     accommodation_id = db.Column(db.Integer, db.ForeignKey("accommodation.id"))

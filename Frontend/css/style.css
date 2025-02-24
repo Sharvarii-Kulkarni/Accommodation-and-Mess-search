@@ -178,6 +178,43 @@ section{
    color: var(--black);
    display: none;
 }
+/*profile button css*/
+.profile-dropdown {
+   position: relative;
+}
+
+.profile-menu {
+   display: none;
+   position: absolute;
+   background: white;
+   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+   border-radius: 5px;
+   padding: 10px;
+   top: 100%;
+   left: 0;
+   min-width: 150px;
+   z-index: 100;
+   opacity: 0;
+   transform: translateY(-10px);
+   transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.profile-dropdown:hover .profile-menu {
+   display: block;
+   opacity: 1;
+   transform: translateY(0);
+}
+
+.profile-menu li {
+   padding: 8px 12px;
+   cursor: pointer;
+   transition: background 0.3s;
+}
+
+.profile-menu li:hover {
+   background: #f0f0f0;
+}
+
 /*home section styling*/
 /* Existing CSS remains unchanged until the .home section */
 
@@ -958,3 +995,35 @@ form .box p span {
 .footer .flex .box:nth-child(2) {
    text-align: center;
 }
+
+
+/* 🔄 Search button animation */
+#search-btn.loading {
+   background-color: #888; /* Change color while loading */
+   cursor: not-allowed;
+   transition: all 1.0s ease;
+}
+
+/* 🔄 Fade-in effect for search results */
+.fade-in {
+   opacity: 0;
+   animation: fadeIn 1.0s ease-in forwards;
+}
+
+@keyframes fadeIn {
+   from { opacity: 0; transform: translateY(10px); }
+   to { opacity: 1; transform: translateY(0); }
+}
+
+
+/* 🔄 Search button animation */
+#mess-search-btn.loading {
+   background-color: #888; /* Change color while loading */
+   cursor: not-allowed;
+   transition: all 1s ease;
+}
+
+
+
+
+
