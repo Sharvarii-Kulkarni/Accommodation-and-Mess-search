@@ -63,6 +63,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+/* ============================================================
+   ✅ Handling Accommodation Search & Displaying Results
+   ============================================================ */
 document.addEventListener("DOMContentLoaded", function () {
     const accommodationSearchForm = document.querySelector("#accommodation-search-form");
     const accommodationResultsSection = document.querySelector("#search-results");
@@ -80,8 +83,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 propertyType = "all";
             }
 
-            fetch(`http://127.0.0.1:5000/search_accommodations?location=${locationKeyword}&type=${propertyType}&budget=${maxBudget}`)
-                .then(response => {
+            console.log("Fetching data from:", `http://127.0.0.1:5000/search_accommodations?location=${locationKeyword}&type=${propertyType}&budget=${maxBudget}`);
+            fetch(`http://127.0.0.1:5000/search_accommodations?location=${locationKeyword}&type=${propertyType}&budget=${maxBudget}`)    
+            .then(response => {
                     if (!response.ok) {
                         throw new Error("Network response was not ok");
                     }
@@ -102,9 +106,9 @@ document.addEventListener("DOMContentLoaded", function () {
                                     <h3 class="name">${acc.name}</h3>
                                     <p class="location"><i class="fas fa-map-marker-alt"></i> ${acc.location}</p>  
                                     <p class="type">Type: ${acc.type}</p>
-                                    <p class="price">Price: ₹${acc.price}</p>
+                                    <p class="price">Price: ₹${acc.rent_price}</p>
                                     <p class="description">${acc.description}</p>
-                                    <a href="view_property.html" class="btn">View Details</a>
+                                    <a href="view_accommodation.html?id=${acc.id}" class="btn">View Details</a>
                                 </div>
                             `;
                             accommodationResultsSection.innerHTML += listing;
@@ -122,7 +126,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-
+/* ============================================================
+   ✅ Handling Mess Service Search & Displaying Results
+   ============================================================ */
 document.addEventListener("DOMContentLoaded", function () {
     const messSearchForm = document.querySelector("#mess-search-form");
     const messResultsSection = document.querySelector("#mess-search-results");
@@ -132,7 +138,16 @@ document.addEventListener("DOMContentLoaded", function () {
             event.preventDefault();
 
             const locationKeyword = document.querySelector("#mess-location").value.trim();  // ✅ Allows keyword search
-            const mealType = document.querySelector("#meal-type").value; 
+            // const mealType = document.querySelector("#meal-type").value; 
+            
+            let mealType = document.querySelector("#meal-type").value;
+
+            // Convert frontend values to backend expected values
+            if (mealType === "both") {
+                mealType = "all";  // Convert "both" to "all"
+            }
+// fetch(`http://127.0.0.1:5000/search_mess?location=${locationKeyword}&meal_type=${mealType}&budget=${maxBudget}`)
+            
             const maxBudget = document.querySelector("#mess-budget").value;
 
             fetch(`http://127.0.0.1:5000/search_mess?location=${locationKeyword}&meal_type=${mealType}&budget=${maxBudget}`)
@@ -150,11 +165,11 @@ document.addEventListener("DOMContentLoaded", function () {
                                         <img src="${mess.image_url}" alt="${mess.name}">
                                     </div>
                                     <h3 class="name">${mess.name}</h3>
-                                    <p class="location"><i class="fas fa-map-marker-alt"></i> ${mess.location}</p>  <!-- ✅ Shows full address -->
+                                    <p class="location"><i class="fas fa-map-marker-alt"></i> ${mess.location}</p>  
                                     <p class="meal-type">Meal Type: ${mess.meal_type}</p>
                                     <p class="price">Price: ₹${mess.price}</p>
                                     <p class="description">${mess.description}</p>
-                                    <a href="view_property.html" class="btn">View Details</a>
+                                    <a href="view_mess.html?id=${mess.id}" class="btn">View Details</a>
                                 </div>
                             `;
                             messResultsSection.innerHTML += listing;
@@ -168,7 +183,4 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 });
-
-
-
 

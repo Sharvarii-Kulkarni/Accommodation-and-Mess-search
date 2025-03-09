@@ -1024,6 +1024,38 @@ form .box p span {
 }
 
 
+.map-btn {
+   background: #007bff;
+   color: white;
+   padding: 10px 15px;
+   border: none;
+   border-radius: 5px;
+   cursor: pointer;
+   margin-top: 10px;
+   display: inline-block;
+}
+.map-btn:hover {
+   background: #0056b3;
+}
+
+.amenities p {
+   font-size: 18px; /* Increase font size */
+   margin: 5px 0; /* Add spacing between items */
+}
+
+.amenities .flex {
+   display: flex;
+   flex-direction: column; /* Arrange items one below another */
+   gap: 10px; /* Add spacing between items */
+}
+
+.amenities p {
+   font-size: 18px; /* Increase readability */
+   font-weight: bold;
+   margin: 0; /* Remove extra spacing */
+}
+
+
 
 
 

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accommodation Details</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+body {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    margin: 20px;
+    padding: 0;
+    background-color: #f8f9fa;
+}
+
+.container {
+    max-width: 900px;
+    margin: 20px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+/* Left Side: Image */
+.image-container {
+    flex: 1;
+    max-width: 30%;
+}
+
+.image-container img {
+    width: 100%;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+/* Right Side: Details */
+.details {
+    flex: 2;
+}
+
+/* Title */
+.title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* Table Styling */
+.details-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+}
+
+.details-table td {
+    padding: 10px;
+    vertical-align: middle;
+    border-bottom: 1px solid #ddd;
+}
+
+.details-table td:first-child {
+    width: 35%; /* Adjust label column width */
+    font-weight: bold;
+    color: #333;
+    white-space: nowrap;
+}
+
+.details-table td i {
+    margin-right: 8px; /* Add spacing between icon and text */
+}
+
+.highlight {
+    font-weight: bold;
+    color: #007bff;
+}
+
+/* Buttons */
+.btn-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.btn {
+    flex: 1;
+    text-align: center;
+    display: inline-block;
+    padding: 10px 16px;
+    font-size: 16px;
+    background: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background: #0056b3;
+}
+
+    </style>
+</head>
+<body>
+
+    <h1 class="title">Accommodation Details</h1>
+
+    <div class="container">
+        <!-- Left Side: Image -->
+        <div class="image-container">
+            <img id="accommodation-image" src="" alt="Accommodation Image">
+        </div>
+
+        <!-- Right Side: Details -->
+        <div class="details">
+            <h2 id="accommodation-name"></h2>
+            <table class="details-table">
+                <tr><td><strong>📍 Location:</strong></td><td id="accommodation-location"></td></tr>
+                <tr><td><strong>🏠 Type:</strong></td><td id="accommodation-type"></td></tr>
+                <tr><td><strong>💰 Rent Price:</strong></td><td class="highlight" id="accommodation-rent"></td></tr>
+                <tr><td><strong>🔒 Deposit:</strong></td><td id="accommodation-deposit"></td></tr>
+                <tr><td><strong>📝 Description:</strong></td><td id="accommodation-description"></td></tr>
+                <tr><td><strong>👤 Owner:</strong></td><td id="accommodation-owner"></td></tr>
+                <tr><td><strong>🛏️ Bedrooms:</strong></td><td id="accommodation-bedrooms"></td></tr>
+                <tr><td><strong>🚿 Bathrooms:</strong></td><td id="accommodation-bathrooms"></td></tr>
+                <tr><td><strong>📏 Carpet Area:</strong></td><td id="accommodation-area"></td></tr>
+                <tr><td><strong>✨ Amenities:</strong></td><td id="accommodation-amenities"></td></tr>
+                <tr><td><strong>📅 Listed On:</strong></td><td id="accommodation-listed"></td></tr>
+                <tr><td><strong>📌 Availability:</strong></td><td class="highlight" id="accommodation-availability"></td></tr>
+            </table>
+
+            <!-- Button at the bottom right -->
+            <div class="btn-container">
+                <a id="find-map-btn" class="btn" target="_blank">📍 Find in Map</a>
+                <a href="search.html" class="btn">🔙 Back to Search</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const accommodationId = urlParams.get("id");
+
+    if (!accommodationId) {
+        document.querySelector(".container").innerHTML = "<p style='color: red;'>Invalid request. No ID provided.</p>";
+        return;
+    }
+
+    fetch(`http://127.0.0.1:5000/accommodation/${accommodationId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch accommodation details.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.error) {
+                document.querySelector(".container").innerHTML = `<p style='color: red;'>${data.error}</p>`;
+            } else {
+                document.getElementById("accommodation-image").src = data.image_url;
+                document.getElementById("accommodation-name").textContent = data.name;
+                document.getElementById("accommodation-location").textContent = data.location;
+                document.getElementById("accommodation-type").textContent = data.type;
+                document.getElementById("accommodation-rent").textContent = `₹${data.rent_price}`;
+                document.getElementById("accommodation-deposit").textContent = `₹${data.deposit_amount}`;
+                document.getElementById("accommodation-description").textContent = data.description;
+                document.getElementById("accommodation-owner").textContent = `${data.owner_name} (${data.phone_number})`;
+                document.getElementById("accommodation-bedrooms").textContent = data.bedrooms;
+                document.getElementById("accommodation-bathrooms").textContent = data.bathrooms;
+                document.getElementById("accommodation-area").textContent = `${data.carpet_area} sq.ft`;
+                document.getElementById("accommodation-amenities").textContent = data.amenities.replace(/\[|\]|"/g, '');
+                document.getElementById("accommodation-listed").textContent = data.listing_date;
+                document.getElementById("accommodation-availability").textContent = data.availability_status ? "✅ Available" : "❌ Not Available";
+
+                // Set Google Maps link dynamically
+                const findMapBtn = document.getElementById("find-map-btn");
+                const locationQuery = encodeURIComponent(data.location);
+                findMapBtn.href = `https://www.google.com/maps/search/?api=1&query=${locationQuery}`;
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching accommodation details:", error);
+            document.querySelector(".container").innerHTML = "<p style='color: red;'>Failed to load accommodation details.</p>";
+        });
+});
+
+    </script>
+
+</body>
+</html>
