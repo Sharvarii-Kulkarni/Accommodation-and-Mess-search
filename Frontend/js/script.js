@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 propertyType = "all";
             }
 
-            console.log("Fetching data from:", `http://127.0.0.1:5000/search_accommodations?location=${locationKeyword}&type=${propertyType}&budget=${maxBudget}`);
+            // console.log("Fetching data from:", `http://127.0.0.1:5000/search_accommodations?location=${locationKeyword}&type=${propertyType}&budget=${maxBudget}`);
             fetch(`http://127.0.0.1:5000/search_accommodations?location=${locationKeyword}&type=${propertyType}&budget=${maxBudget}`)    
             .then(response => {
                     if (!response.ok) {
