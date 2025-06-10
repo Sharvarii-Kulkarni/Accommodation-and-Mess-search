@@ -1,0 +1,777 @@
+// 🗺️ Global map variables
+let map;
+let markers = [];
+const defaultLocation = { lat: 18.5204, lng: 73.8567 }; // Pune default center
+let userLocationMarker = null;
+let locationButton = null;
+let directionsService = null;
+let directionsRenderer = null;
+let activeInfoWindow = null;
+
+// 🗺️ Initialize Google Map
+function initMap() {
+    // Create map centered at Pune
+    map = new google.maps.Map(document.getElementById("map"), {
+        center: defaultLocation,
+        zoom: 12,
+        styles: [
+            {
+                featureType: "poi",
+                elementType: "labels",
+                stylers: [{ visibility: "off" }]
+            }
+        ]
+    });
+
+    // Initialize the directions service and renderer
+    directionsService = new google.maps.DirectionsService();
+    directionsRenderer = new google.maps.DirectionsRenderer({
+        suppressMarkers: true,
+        polylineOptions: {
+            strokeColor: "#4285F4",
+            strokeWeight: 5,
+            strokeOpacity: 0.7
+        }
+    });
+    directionsRenderer.setMap(map);
+
+    // Create a custom control for getting user location
+    locationButton = document.createElement("button");
+    locationButton.innerHTML = '<i class="fas fa-location-arrow"></i> You Are Here';
+    locationButton.classList.add("custom-map-control");
+    locationButton.addEventListener("click", getUserLocation);
+    
+    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(locationButton);
+
+    // If on search page, fetch all accommodations for initial display
+    if (document.querySelector("#accommodation-search-form")) {
+        fetchAllAccommodations();
+    }
+}
+
+// Get user's current location
+function getUserLocation() {
+    if (navigator.geolocation) {
+        // Show loading state
+        locationButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Locating...';
+        locationButton.disabled = true;
+        
+        navigator.geolocation.getCurrentPosition(
+            // Success callback
+            (position) => {
+                const userLocation = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                
+                // Center map on user location
+                map.setCenter(userLocation);
+                map.setZoom(15);
+                
+                // Add or update "You Are Here" marker
+                if (userLocationMarker) {
+                    userLocationMarker.setPosition(userLocation);
+                } else {
+                    userLocationMarker = new google.maps.Marker({
+                        position: userLocation,
+                        map: map,
+                        title: "You Are Here",
+                        icon: {
+                            path: google.maps.SymbolPath.CIRCLE,
+                            scale: 10,
+                            fillColor: "#4285F4",
+                            fillOpacity: 1,
+                            strokeColor: "#FFFFFF",
+                            strokeWeight: 2
+                        },
+                        zIndex: 1000 // Ensure it's above other markers
+                    });
+                    
+                    // Add a pulsing animation effect
+                    animateMarker(userLocationMarker);
+                    
+                    // Add info window
+                    const infoWindow = new google.maps.InfoWindow({
+                        content: '<div style="font-weight: bold;">You Are Here</div>'
+                    });
+                    
+                    userLocationMarker.addListener("click", () => {
+                        infoWindow.open(map, userLocationMarker);
+                    });
+                }
+                
+                // Calculate distances to all visible markers
+                calculateDistances(userLocation);
+                
+                // Reset button state
+                locationButton.innerHTML = '<i class="fas fa-location-arrow"></i> You Are Here';
+                locationButton.disabled = false;
+            },
+            // Error callback
+            (error) => {
+                console.error("Error getting user location:", error);
+                alert("Could not get your location. Please check your device settings and try again.");
+                
+                // Reset button state
+                locationButton.innerHTML = '<i class="fas fa-location-arrow"></i> You Are Here';
+                locationButton.disabled = false;
+            },
+            // Options
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0
+            }
+        );
+    } else {
+        alert("Geolocation is not supported by this browser.");
+    }
+}
+
+// Animate the user location marker with a pulsing effect
+function animateMarker(marker) {
+    let scale = 10;
+    let growing = false;
+    
+    setInterval(() => {
+        if (growing) {
+            scale += 0.2;
+            if (scale >= 12) growing = false;
+        } else {
+            scale -= 0.2;
+            if (scale <= 8) growing = true;
+        }
+        
+        marker.setIcon({
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: scale,
+            fillColor: "#4285F4",
+            fillOpacity: 1,
+            strokeColor: "#FFFFFF",
+            strokeWeight: 2
+        });
+    }, 100);
+}
+
+// Calculate and display distances from user to visible markers
+function calculateDistances(userLocation) {
+    markers.forEach(marker => {
+        const distance = google.maps.geometry.spherical.computeDistanceBetween(
+            new google.maps.LatLng(userLocation),
+            marker.getPosition()
+        );
+        
+        // Convert to kilometers with 1 decimal place
+        const distanceKm = (distance / 1000).toFixed(1);
+        
+        // Update existing info window content to include distance
+        const existingContent = marker.infoWindow.getContent();
+        const newContent = existingContent.replace(
+            '</div>',
+            `<p><strong>Distance:</strong> ${distanceKm} km from you</p></div>`
+        );
+        
+        marker.infoWindow.setContent(newContent);
+    });
+}
+
+// 🗺️ Fetch all accommodations to display on map initially
+function fetchAllAccommodations() {
+    fetch("http://127.0.0.1:5000/search_accommodations?location=&type=all&budget=30000")
+        .then(response => response.json())
+        .then(data => {
+            // Display all accommodations on map
+            displayAccommodationsOnMap(data);
+        })
+        .catch(error => console.error("Error fetching initial accommodations:", error));
+}
+
+// 🗺️ Display accommodation markers on map
+function displayAccommodationsOnMap(accommodations) {
+    // Clear existing markers
+    clearMarkers();
+    
+    // Clear any existing directions
+    if (directionsRenderer) {
+        directionsRenderer.setDirections({routes: []});
+    }
+    
+    // Skip if no accommodations or map not initialized
+    if (!accommodations.length || !map) return;
+    
+    const bounds = new google.maps.LatLngBounds();
+    
+    // Process each accommodation
+    accommodations.forEach(acc => {
+        // Geocode the location if coordinates not available
+        geocodeAddress(acc.location, (position) => {
+            if (!position) return;
+            
+            // Create marker
+            const marker = new google.maps.Marker({
+                position: position,
+                map: map,
+                title: acc.name,
+                animation: google.maps.Animation.DROP
+            });
+            
+            // Add property coordinates to the marker object for route calculation
+            marker.propertyPosition = position;
+            
+            // Create info window with accommodation details and route button
+            const infoContent = `
+                <div class="info-window">
+                    <h3>${acc.name}</h3>
+                    <p><strong>Type:</strong> ${acc.type}</p>
+                    <p><strong>Price:</strong> ₹${acc.rent_price}</p>
+                    <p><strong>Location:</strong> ${acc.location}</p>
+                    <div class="info-window-buttons">
+                        <a href="view_accommodation.html?id=${acc.id}" class="map-link">View Details</a>
+                        <button class="route-button" onclick="calculateRoute('${acc.location}')">
+                            <i class="fas fa-route"></i> Route to Here
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            const infoWindow = new google.maps.InfoWindow({
+                content: infoContent
+            });
+            
+            // Add click event to marker
+            marker.addListener("click", () => {
+                // Close any open info window
+                if (activeInfoWindow) {
+                    activeInfoWindow.close();
+                }
+                
+                // Open this info window
+                infoWindow.open(map, marker);
+                activeInfoWindow = infoWindow;
+            });
+            
+            // Store reference to info window
+            marker.infoWindow = infoWindow;
+            
+            // Add marker to collection
+            markers.push(marker);
+            
+            // Extend bounds to include this location
+            bounds.extend(position);
+            
+            // Fit map to bounds if multiple markers
+            if (markers.length > 1) {
+                map.fitBounds(bounds);
+            } else if (markers.length === 1) {
+                map.setCenter(position);
+                map.setZoom(15);
+            }
+        });
+    });
+}
+
+// Calculate and display route from user location to selected property
+// Improved route calculation with better error handling and timeouts
+function calculateRoute(destination) {
+    // Check if user location is available
+    if (!userLocationMarker) {
+        alert("Please click 'You Are Here' button first to get your location.");
+        return;
+    }
+    
+    // Show loading indicator
+    const loadingDiv = document.createElement('div');
+    loadingDiv.id = 'route-loading';
+    loadingDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Calculating route...';
+    document.body.appendChild(loadingDiv);
+    
+    const origin = userLocationMarker.getPosition();
+    
+    // Add timeout for route calculation
+    const routeTimeout = setTimeout(() => {
+        // Remove loading indicator if it still exists
+        const loadingElement = document.getElementById('route-loading');
+        if (loadingElement) loadingElement.remove();
+        
+        alert("Route calculation timed out. Please try again later.");
+    }, 10000); // 10 second timeout
+    
+    // Request directions
+    directionsService.route(
+        {
+            origin: origin,
+            destination: destination,
+            travelMode: google.maps.TravelMode.DRIVING,
+            alternatives: true
+        },
+        (response, status) => {
+            // Clear the timeout since we got a response
+            clearTimeout(routeTimeout);
+            
+            // Remove loading indicator
+            const loadingElement = document.getElementById('route-loading');
+            if (loadingElement) loadingElement.remove();
+            
+            if (status === "OK") {
+                // Display the route
+                directionsRenderer.setDirections(response);
+                
+                // Create route info panel
+                const route = response.routes[0];
+                const duration = route.legs[0].duration.text;
+                const distance = route.legs[0].distance.text;
+                
+                const routeInfoDiv = document.createElement('div');
+                routeInfoDiv.id = 'route-info';
+                routeInfoDiv.innerHTML = `
+                    <div class="route-info-header">
+                        <h3>Route Information</h3>
+                        <button id="close-route-info"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="route-info-content">
+                        <p><i class="fas fa-clock"></i> <strong>Duration:</strong> ${duration}</p>
+                        <p><i class="fas fa-road"></i> <strong>Distance:</strong> ${distance}</p>
+                        <div class="travel-mode-selector">
+                            <button class="travel-mode-btn active" data-mode="DRIVING">
+                                <i class="fas fa-car"></i> Driving
+                            </button>
+                            <button class="travel-mode-btn" data-mode="WALKING">
+                                <i class="fas fa-walking"></i> Walking
+                            </button>
+                            <button class="travel-mode-btn" data-mode="BICYCLING">
+                                <i class="fas fa-bicycle"></i> Cycling
+                            </button>
+                            <button class="travel-mode-btn" data-mode="TRANSIT">
+                                <i class="fas fa-bus"></i> Transit
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(routeInfoDiv);
+                
+                // Add event listeners for travel mode buttons
+                document.querySelectorAll('.travel-mode-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        // Update active button
+                        document.querySelectorAll('.travel-mode-btn').forEach(b => b.classList.remove('active'));
+                        e.target.closest('.travel-mode-btn').classList.add('active');
+                        
+                        // Get selected travel mode
+                        const mode = e.target.closest('.travel-mode-btn').dataset.mode;
+                        
+                        // Recalculate route with new travel mode
+                        updateRoute(origin, destination, mode);
+                    });
+                });
+                
+                // Add event listener for close button
+                document.getElementById('close-route-info').addEventListener('click', () => {
+                    document.getElementById('route-info').remove();
+                    directionsRenderer.setDirections({routes: []});
+                });
+            } else {
+                // Handle specific error codes
+                let errorMessage = "Could not calculate route";
+                
+                switch(status) {
+                    case "ZERO_RESULTS":
+                        errorMessage = "No route could be found between your location and the destination.";
+                        break;
+                    case "OVER_QUERY_LIMIT":
+                        errorMessage = "Too many requests to the Google Maps API. Please try again later.";
+                        break;
+                    case "REQUEST_DENIED":
+                        errorMessage = "Route calculation was denied. Check API key permissions.";
+                        break;
+                    case "INVALID_REQUEST":
+                        errorMessage = "Invalid route request. Please try a different location.";
+                        break;
+                    default:
+                        errorMessage = `Route calculation failed: ${status}`;
+                }
+                
+                // Show error with fallback button for directions
+                const errorDiv = document.createElement('div');
+                errorDiv.id = 'route-error';
+                errorDiv.innerHTML = `
+                    <div class="route-error-content">
+                        <p><i class="fas fa-exclamation-triangle"></i> ${errorMessage}</p>
+                        <button id="dismiss-error" class="btn">Dismiss</button>
+                        <a href="https://www.google.com/maps/dir/?api=1&origin=${origin.lat()},${origin.lng()}&destination=${encodeURIComponent(destination)}" 
+                           target="_blank" class="btn">Open in Google Maps</a>
+                    </div>
+                `;
+                
+                document.body.appendChild(errorDiv);
+                
+                // Add event listener for dismiss button
+                document.getElementById('dismiss-error').addEventListener('click', () => {
+                    document.getElementById('route-error').remove();
+                });
+                
+                // Auto-dismiss after 10 seconds
+                setTimeout(() => {
+                    const errorElement = document.getElementById('route-error');
+                    if (errorElement) errorElement.remove();
+                }, 10000);
+            }
+        }
+    );
+}
+
+// Improved update route function with better error handling
+function updateRoute(origin, destination, travelMode) {
+    // Show loading indicator
+    document.querySelector('.route-info-content').innerHTML = '<p><i class="fas fa-spinner fa-spin"></i> Updating route...</p>';
+    
+    // Add timeout for route update
+    const updateTimeout = setTimeout(() => {
+        document.querySelector('.route-info-content').innerHTML = `
+            <p><i class="fas fa-exclamation-triangle"></i> Route update timed out.</p>
+            <button id="try-again-btn" class="btn">Try Again</button>
+            <a href="https://www.google.com/maps/dir/?api=1&origin=${origin.lat()},${origin.lng()}&destination=${encodeURIComponent(destination)}&travelmode=${travelMode.toLowerCase()}" 
+               target="_blank" class="btn">Open in Google Maps</a>
+        `;
+        
+        document.getElementById('try-again-btn').addEventListener('click', () => {
+            updateRoute(origin, destination, travelMode);
+        });
+    }, 10000); // 10 second timeout
+    
+    directionsService.route(
+        {
+            origin: origin,
+            destination: destination,
+            travelMode: google.maps.TravelMode[travelMode]
+        },
+        (response, status) => {
+            // Clear the timeout since we got a response
+            clearTimeout(updateTimeout);
+            
+            if (status === "OK") {
+                // Display the updated route
+                directionsRenderer.setDirections(response);
+                
+                // Update route info
+                const route = response.routes[0];
+                const duration = route.legs[0].duration.text;
+                const distance = route.legs[0].distance.text;
+                
+                document.querySelector('.route-info-content').innerHTML = `
+                    <p><i class="fas fa-clock"></i> <strong>Duration:</strong> ${duration}</p>
+                    <p><i class="fas fa-road"></i> <strong>Distance:</strong> ${distance}</p>
+                    <div class="travel-mode-selector">
+                        <button class="travel-mode-btn ${travelMode === 'DRIVING' ? 'active' : ''}" data-mode="DRIVING">
+                            <i class="fas fa-car"></i> Driving
+                        </button>
+                        <button class="travel-mode-btn ${travelMode === 'WALKING' ? 'active' : ''}" data-mode="WALKING">
+                            <i class="fas fa-walking"></i> Walking
+                        </button>
+                        <button class="travel-mode-btn ${travelMode === 'BICYCLING' ? 'active' : ''}" data-mode="BICYCLING">
+                            <i class="fas fa-bicycle"></i> Cycling
+                        </button>
+                        <button class="travel-mode-btn ${travelMode === 'TRANSIT' ? 'active' : ''}" data-mode="TRANSIT">
+                            <i class="fas fa-bus"></i> Transit
+                        </button>
+                    </div>
+                `;
+                
+                // Re-add event listeners for travel mode buttons
+                document.querySelectorAll('.travel-mode-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        // Update active button
+                        document.querySelectorAll('.travel-mode-btn').forEach(b => b.classList.remove('active'));
+                        e.target.closest('.travel-mode-btn').classList.add('active');
+                        
+                        // Get selected travel mode
+                        const mode = e.target.closest('.travel-mode-btn').dataset.mode;
+                        
+                        // Recalculate route with new travel mode
+                        updateRoute(origin, destination, mode);
+                    });
+                });
+            } else {
+                // Handle specific error types
+                let errorMessage = "Could not update route with selected travel mode.";
+                
+                if (status === "ZERO_RESULTS") {
+                    errorMessage = `No ${travelMode.toLowerCase()} route available between these locations.`;
+                }
+                
+                document.querySelector('.route-info-content').innerHTML = `
+                    <p><i class="fas fa-exclamation-triangle"></i> ${errorMessage}</p>
+                    <div class="travel-mode-selector">
+                        <button class="travel-mode-btn ${travelMode === 'DRIVING' ? 'active' : ''}" data-mode="DRIVING">
+                            <i class="fas fa-car"></i> Driving
+                        </button>
+                        <button class="travel-mode-btn ${travelMode === 'WALKING' ? 'active' : ''}" data-mode="WALKING">
+                            <i class="fas fa-walking"></i> Walking
+                        </button>
+                        <button class="travel-mode-btn ${travelMode === 'BICYCLING' ? 'active' : ''}" data-mode="BICYCLING">
+                            <i class="fas fa-bicycle"></i> Cycling
+                        </button>
+                        <button class="travel-mode-btn ${travelMode === 'TRANSIT' ? 'active' : ''}" data-mode="TRANSIT">
+                            <i class="fas fa-bus"></i> Transit
+                        </button>
+                    </div>
+                    <a href="https://www.google.com/maps/dir/?api=1&origin=${origin.lat()},${origin.lng()}&destination=${encodeURIComponent(destination)}&travelmode=${travelMode.toLowerCase()}" 
+                      target="_blank" class="btn map-external-link">
+                      <i class="fas fa-external-link-alt"></i> Open in Google Maps
+                    </a>
+                `;
+                
+                // Re-add event listeners for travel mode buttons
+                document.querySelectorAll('.travel-mode-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        // Update active button
+                        document.querySelectorAll('.travel-mode-btn').forEach(b => b.classList.remove('active'));
+                        e.target.closest('.travel-mode-btn').classList.add('active');
+                        
+                        // Get selected travel mode
+                        const mode = e.target.closest('.travel-mode-btn').dataset.mode;
+                        
+                        // Recalculate route with new travel mode
+                        updateRoute(origin, destination, mode);
+                    });
+                });
+            }
+        }
+    );
+}
+
+// Add additional CSS styles for error handling
+document.addEventListener("DOMContentLoaded", function() {
+    const additionalStyles = document.createElement('style');
+    additionalStyles.textContent = `
+        #route-error {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            z-index: 100;
+            padding: 15px;
+        }
+        
+        .route-error-content {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .route-error-content p {
+            margin: 0;
+            color: #d32f2f;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .map-external-link {
+            background-color: #4285F4;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .map-external-link:hover {
+            background-color: #3367d6;
+        }
+    `;
+    document.head.appendChild(additionalStyles);
+});
+
+// 🗺️ Geocode address to get coordinates
+function geocodeAddress(address, callback) {
+    // Skip if no address provided
+    if (!address) {
+        callback(null);
+        return;
+    }
+    
+    // Create geocoder instance
+    const geocoder = new google.maps.Geocoder();
+    
+    // Add "Pune" to address if not present to improve geocoding accuracy
+    if (!address.toLowerCase().includes("pune")) {
+        address += ", Pune, Maharashtra";
+    }
+    
+    // Perform geocoding
+    geocoder.geocode({ address: address }, (results, status) => {
+        if (status === "OK" && results[0]) {
+            callback(results[0].geometry.location);
+        } else {
+            console.warn(`Geocoding failed for address: ${address}. Status: ${status}`);
+            callback(null);
+        }
+    });
+}
+
+// 🗺️ Clear all markers from map
+function clearMarkers() {
+    markers.forEach(marker => marker.setMap(null));
+    markers = [];
+}
+
+// Add CSS for the route features
+document.addEventListener("DOMContentLoaded", function() {
+    const style = document.createElement('style');
+    style.textContent = `
+        .custom-map-control {
+            background-color: #fff;
+            border: none;
+            border-radius: 2px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+            margin: 10px;
+            padding: 8px 16px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+        
+        .custom-map-control:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .custom-map-control i {
+            margin-right: 8px;
+            color: #4285F4;
+        }
+        
+        .custom-map-control:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        .info-window-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .route-button {
+            background-color: #34A853;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .route-button:hover {
+            background-color: #2E8B57;
+        }
+        
+        #route-loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        #route-info {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            z-index: 100;
+        }
+        
+        .route-info-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .route-info-header h3 {
+            margin: 0;
+            font-size: 16px;
+            color: #333;
+        }
+        
+        #close-route-info {
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            color: #777;
+        }
+        
+        #close-route-info:hover {
+            color: #333;
+        }
+        
+        .route-info-content {
+            padding: 15px;
+        }
+        
+        .route-info-content p {
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .travel-mode-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .travel-mode-btn {
+            background-color: #f1f1f1;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+        
+        .travel-mode-btn:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .travel-mode-btn.active {
+            background-color: #4285F4;
+            color: white;
+        }
+    `;
+    document.head.appendChild(style);
+});

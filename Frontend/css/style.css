@@ -1,5 +1,148 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400&display=swap');
 
+
+
+/* Add these media queries to make your site mobile-friendly */
+
+/* For tablets and smaller devices */
+@media (max-width: 768px) {
+   html { font-size: 55%; }
+
+   .center { flex-direction: column; }
+
+   .home-intro { padding-right: 0; max-width: 100%; }
+
+   .main-quote { font-size: 36px; }
+
+   form { max-width: 100%; }
+
+   #menu-btn { display: block; }
+
+   .header .navbar .flex > ul li {
+     width: 100%;
+     text-align: center;
+   }
+
+   .header .navbar .flex > ul li a {
+     display: block;
+     padding: 1rem 1.5rem;
+     border-bottom: 1px solid #eee;
+     font-size: 1.6rem;
+     background-color: var(--light-bg);
+   }
+
+   .footer .flex {
+     flex-direction: column;
+     align-items: center;
+   }
+
+   .footer .box {
+     width: 100%;
+     text-align: center;
+   }
+
+   .services .box-container,
+   .listings .box-container,
+   .steps .box-container,
+   .reviews .box-container {
+     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+   }
+   .header .navbar .flex > ul {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      margin-top: 1rem;
+   }
+   
+   .header .navbar .flex > ul.active {
+      display: flex;
+   }
+   
+   .header .navbar .flex ul li {
+      float: none; /* override desktop float */
+   }
+   
+}
+
+ /* For even smaller screens (phones) */
+ @media (max-width: 480px) {
+   html { font-size: 50%; }
+
+   .main-quote { font-size: 28px; }
+
+   .sub-quote { font-size: 18px; }
+
+   .intro-para { font-size: 16px; }
+
+   section { padding: 2rem 1rem; }
+
+   .container { flex-direction: column; }
+
+   .header .navbar.nav-1 .flex {
+     padding-top: 1rem;
+     padding-bottom: 0.8rem;
+   }
+
+   .header .navbar .flex .logo {
+     font-size: 1.6rem;
+   }
+
+   .profile-dropdown .profile-menu {
+     right: 0;
+     left: auto;
+   }
+
+   .view-property .details .thumb .big-image img {
+     height: auto;
+   }
+
+   .view-property .details .flex .box {
+     flex: 1 1 100%;
+   }
+
+   #filter-btn {
+     display: block;
+   }
+
+   .services .box-container,
+   .listings .box-container,
+   .steps .box-container,
+   .reviews .box-container {
+     grid-template-columns: 1fr;
+   }
+}
+
+ 
+
+/* ✅ Increase image size in listings */
+.box .thumb img {
+   width: 250px;  /* Increased width */
+   height: auto;  /* Maintain aspect ratio */
+   border-radius: 8px; /* Smooth rounded corners */
+   object-fit: cover;  /* Ensures images look good */
+   transition: transform 0.3s ease-in-out;
+}
+
+/* ✅ Add hover effect to slightly enlarge images */
+.box .thumb img:hover {
+   transform: scale(1.1); /* Zoom effect on hover */
+}
+
+
+.admin-btn {
+   background-color: var(--main-color);
+   color: var(--white);
+   padding: 8px 16px;
+   border-radius: 5px;
+   font-weight: bold;
+   transition: 0.3s ease;
+}
+
+.admin-btn:hover {
+   background-color: #d67e0f;
+}
+
+
 :root{
    --main-color:#eb8613;
    --light-color:#666;
@@ -88,11 +231,105 @@ section{
    display: inline-block;
 }
 
-.header{
-   position: sticky;
-   top: 0; left: 0; right: 0;
+.header {
+   top: 0;
+   left: 0;
+   right: 0;
    z-index: 1000;
    box-shadow: var(--box-shodow);
+   background-color: var(--white);
+}
+
+/* Keep sticky only on desktop/tablet */
+@media (min-width: 769px) {
+   .header {
+      position: sticky;
+   }
+}
+
+/* Let it scroll away on mobile (non-sticky) */
+@media (max-width: 768px) {
+   .header {
+      position: static;
+   }
+}
+
+.header .navbar.nav-1 .flex{
+   padding-top: 1.5rem;
+   padding-bottom: 1.2rem;
+}
+
+.header .navbar.nav-2 .flex{
+   padding-top: 0;
+   padding-bottom: 0;
+}
+
+.header .navbar.nav-1{
+   background-color: var(--black);
+}
+
+.header .navbar.nav-2{
+   background-color: var(--white);
+}
+
+.header .navbar .flex{
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+}
+
+.header .navbar .flex .logo{
+   font-size: 2.2rem;
+   color: var(--white); 
+}
+
+.header .navbar .flex .logo i{
+   color: var(--main-color);
+   margin-right: 1rem;
+}
+
+.header .navbar .flex ul{
+   list-style: none;
+}
+
+.header .navbar .flex ul li{
+   float: left;
+   position: relative;
+}
+
+.header .navbar .flex ul li a{
+   display: inline-block;
+   padding: 1.2rem 2rem;
+   font-size: 1.8rem;
+   color: var(--black);
+   background-color: var(--white);
+}
+
+.header .navbar .flex ul li a:hover{
+   background-color: var(--main-color);
+   color: var(--white);
+}
+
+.header .navbar .flex ul li a i{
+   margin-left: 1rem;
+}
+
+.header .navbar .flex ul li ul{
+   position: absolute;
+   width: 17rem;
+   left: 0;
+}
+
+.header .navbar .flex ul li ul li{
+   width: 100%;
+}
+
+.header .navbar .flex ul li ul li a{
+   display: none;
+}
+
+.header .navbar .flex ul li:hover ul li a{
+   display: block;
 }
 
 .header .navbar.nav-1 .flex{
@@ -520,30 +757,7 @@ form .box p span {
    color: var(--main-color);
 }
 
-.listings .box-container .box .flex {
-   display: flex;
-   background-color: var(--light-bg);
-   padding: 15px; /* 1.5rem to 24px */
-   justify-content: space-between;
-   align-items: center;
-   margin: 20px 0; /* 1.5rem to 24px */
-   flex-wrap: wrap;
-   gap: 10px; /* 1.5rem to 24px */
-}
 
-.listings .box-container .box .flex p {
-   font-size: 18px; /* 1.6rem to 25.6px */
-   flex: 1 1 40px; /* 4rem to 64px */
-}
-
-.listings .box-container .box .flex p span {
-   color: var(--light-color);
-}
-
-.listings .box-container .box .flex p i {
-   margin-right: 15px; /* 1rem to 16px */
-   color: var(--main-color);
-}
 
 .view-property .details {
    background-color: var(--white);
@@ -949,6 +1163,7 @@ form .box p span {
 .footer {
    background-color: var(--black);
    padding: 10px 0;
+   margin-top: 10%;;
 }
 
 .footer .flex {
@@ -1022,40 +1237,3 @@ form .box p span {
    cursor: not-allowed;
    transition: all 1s ease;
 }
-
-
-.map-btn {
-   background: #007bff;
-   color: white;
-   padding: 10px 15px;
-   border: none;
-   border-radius: 5px;
-   cursor: pointer;
-   margin-top: 10px;
-   display: inline-block;
-}
-.map-btn:hover {
-   background: #0056b3;
-}
-
-.amenities p {
-   font-size: 18px; /* Increase font size */
-   margin: 5px 0; /* Add spacing between items */
-}
-
-.amenities .flex {
-   display: flex;
-   flex-direction: column; /* Arrange items one below another */
-   gap: 10px; /* Add spacing between items */
-}
-
-.amenities p {
-   font-size: 18px; /* Increase readability */
-   font-weight: bold;
-   margin: 0; /* Remove extra spacing */
-}
-
-
-
-
-

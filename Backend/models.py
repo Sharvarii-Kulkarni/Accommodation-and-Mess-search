@@ -9,7 +9,11 @@ class User(db.Model):
     email = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.Text, nullable=False)
 
-
+class Admin(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(100), unique=True, nullable=False)
+    password = db.Column(db.String(255), nullable=False)  # Store hashed password
+    
 class Accommodation(db.Model):
     __tablename__ = "accommodations"  # ✅ Make sure this matches your table name
 
@@ -56,6 +60,6 @@ class MessService(db.Model):
 class SavedListing(db.Model):
     __tablename__ = "saved_listing" 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    accommodation_id = db.Column(db.Integer, db.ForeignKey("accommodation.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    accommodation_id = db.Column(db.Integer, db.ForeignKey("accommodations.id"))
     mess_id = db.Column(db.Integer, db.ForeignKey("mess_service.id"))

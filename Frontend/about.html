@@ -15,67 +15,63 @@
 </head>
 <body>
    
-<!-- header section starts  -->
-
-<header class="header">
-
-   <nav class="navbar nav-1">
-      <section class="flex">
-         <a href="home.html" class="logo"><i class="fas fa-house"></i>FindRoom</a>
-      </section>
-   </nav>
-
-   <nav class="navbar nav-2">
-      <section class="flex">
-         <div id="menu-btn" class="fas fa-bars"></div>
-
-         <div class="menu">
-            <ul>
-               <li><a href="#">rent<i class="fas fa-angle-down"></i></a>
+   <header class="header">
+      <nav class="navbar nav-1">
+          <section class="flex">
+              <a href="home.html" class="logo"><i class="fas fa-house"></i>FindRoom</a>
+          </section>
+      </nav>
+      
+      <nav class="navbar nav-2">
+          <section class="flex">
+              <div id="menu-btn" class="fas fa-bars"></div>
+              <div class="menu">
                   <ul>
-                     <li><a href="#">flat</a></li>
-                     <li><a href="#">hostel</a></li>
-                     <li><a href="#">PG</a></li>
+                      <li><a href="#">rent<i class="fas fa-angle-down"></i></a>
+                          <ul>
+                              <li><a href="rent_listings.html?type=flat">Flat</a></li>
+                              <li><a href="rent_listings.html?type=hostel">Hostel</a></li>
+                              <li><a href="rent_listings.html?type=pg">PG</a></li>
+                              <li><a href="rent_listings.html?type=all">All Accommodations</a></li>
+                          </ul>
+                      </li>
+                      <li><a href="#">Mess <i class="fas fa-angle-down"></i></a>
+                          <ul>
+                              <li><a href="mess_listings.html?meal_type=pure veg">Veg</a></li>
+                              <li><a href="mess_listings.html?meal_type=veg/non-veg">Veg/Non-Veg</a></li>
+                              <li><a href="mess_listings.html?meal_type=both">All Mess Services</a></li>
+                          </ul>
+                      </li>
+                      <li><a href="#">help<i class="fas fa-angle-down"></i></a>
+                          <ul>
+                              <li><a href="about.html">about us</a></li>
+                              <li><a href="contact.html">contact us</a></li>
+                              <li><a href="contact.html#faq">FAQ</a></li>
+                          </ul>
+                      </li>
                   </ul>
-               </li>
-               <li><a href="#">mess<i class="fas fa-angle-down"></i></a>
-                  <ul>
-                     <li><a href="#">veg</a></li>
-                     <li><a href="#">veg/non-veg</a></li>
-                  </ul>
-               </li>
-               <li><a href="#">help<i class="fas fa-angle-down"></i></a>
-                  <ul>
-                     <li><a href="about.html">about us</a></i></li>
-                     <li><a href="contact.html">contact us</a></i></li>
-                     <li><a href="contact.html#faq">FAQ</a></i></li>
-                  </ul>
-               </li>
-            </ul>
-         </div>
-
-         <ul>
-            <li><a href="#">saved <i class="far fa-heart"></i></a></li>
-            <li><a href="#">account <i class="fas fa-angle-down"></i></a>
-               <ul>
-                  <li><a href="login.html">login</a></li>
-                  <li><a href="register.html">register</a></li>
-               </ul>
-            </li>
-            <li class="profile-dropdown">
-               <a href="#"><i class="fas fa-user-circle"></i> Profile <i class="fas fa-angle-down"></i></a>
-               <ul class="profile-menu">
-                  <li id="user-info">Not logged in</li>
-                  <li><a href="#" id="logout-btn">Logout</a></li>
-               </ul>
-            </li>   
-         </ul>
-      </section>
-   </nav>
-</header>
-
-<!-- header section ends -->
-
+              </div>
+              <ul>
+                  <li><a href="saved_listing.html">Favourites <i class="far fa-heart"></i></a></li>
+                  <li><a href="#">account <i class="fas fa-angle-down"></i></a>
+                      <ul>
+                          <li><a href="login.html">login</a></li>
+                          <li><a href="register.html">register</a></li>
+                      </ul>
+                  </li>
+                  <li class="profile-dropdown">
+                      <a href="#"><i class="fas fa-user-circle"></i> Profile <i class="fas fa-angle-down"></i></a>
+                      <ul class="profile-menu">
+                          <li id="user-info">Not logged in</li>
+                          <li><a href="#" id="logout-btn">Logout</a></li>
+                      </ul>
+                  </li>
+                  <li><a href="admin_login.html" class="admin-btn">Admin Login</a></li>
+              </ul>
+          </section>
+      </nav>
+  </header>
+  <!-- Header Section Ends -->
 <!-- about section starts  -->
 
 <section class="about">
@@ -86,7 +82,7 @@
       </div>
       <div class="content">
          <h3>why choose us?</h3>
-         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum dolorem provident voluptatum distinctio laborum veritatis vitae suscipit praesentium fugiat unde?</p>
+         <p>FindRoom makes your Pune home hunt a breeze, connecting you to cozy rooms and tasty mess services with a tap. Secure, trusted, and packed with WhatsApp ease, we’re your key to settling in fast!</p>
          <a href="contact.html" class="inline-btn">contact us</a>
       </div>
    </div>
@@ -137,9 +133,9 @@
 
       <div class="box">
          <div class="user">
-            <img src="images/pic-1.png" alt="">
+            <img src="images/vasundhara.jpg" alt="">
             <div>
-               <h3>john deo</h3>
+               <h3>Vasundhara Yadav</h3>
                <div class="stars">
                   <i class="fas fa-star"></i>
                   <i class="fas fa-star"></i>
@@ -149,14 +145,14 @@
                </div>
             </div>
          </div>
-         <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Adipisci voluptates delectus distinctio quam sequi error eum suscipit tempore inventore ex!</p>
+         <p>FindRoom saved my day! Found a cozy PG in Pune in hours, mess details were spot-on, and chatting with the owner on WhatsApp was a breeze.</p>
       </div>
 
       <div class="box">
          <div class="user">
-            <img src="images/pic-2.png" alt="">
+            <img src="images/soham.jpg" alt="">
             <div>
-               <h3>john deo</h3>
+               <h3>Soham Ingawale</h3>
                <div class="stars">
                   <i class="fas fa-star"></i>
                   <i class="fas fa-star"></i>
@@ -166,14 +162,14 @@
                </div>
             </div>
          </div>
-         <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Adipisci voluptates delectus distinctio quam sequi error eum suscipit tempore inventore ex!</p>
+         <p>This app’s a gem for students like me—secure, easy to browse, and I love saving my favorite rooms for later!</p>
       </div>
 
       <div class="box">
          <div class="user">
-            <img src="images/pic-3.png" alt="">
+            <img src="images/prathamesh.jpg" alt="">
             <div>
-               <h3>john deo</h3>
+               <h3>Prathamesh Thorat</h3>
                <div class="stars">
                   <i class="fas fa-star"></i>
                   <i class="fas fa-star"></i>
@@ -183,14 +179,14 @@
                </div>
             </div>
          </div>
-         <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Adipisci voluptates delectus distinctio quam sequi error eum suscipit tempore inventore ex!</p>
+         <p>Moved to Pune for work and FindRoom hooked me up with a perfect flat. Trusted listings and quick map links made settling in so simple.</p>
       </div>
 
       <div class="box">
          <div class="user">
-            <img src="images/pic-4.png" alt="">
+            <img src="images/ashlesha.jpg" alt="">
             <div>
-               <h3>john deo</h3>
+               <h3>Ashlesha Dhotre</h3>
                <div class="stars">
                   <i class="fas fa-star"></i>
                   <i class="fas fa-star"></i>
@@ -200,14 +196,14 @@
                </div>
             </div>
          </div>
-         <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Adipisci voluptates delectus distinctio quam sequi error eum suscipit tempore inventore ex!</p>
+         <p>नावात ‘Find’ असलं तरी, या वेबसाईटवर हरवण्याचा संभवच नाही. युजर इंटरफेस इतकं आकर्षक आणि नितळ की, निवास शोधणं हे एक सर्जनशील प्रवास वाटतो.</p>
       </div>
 
       <div class="box">
          <div class="user">
-            <img src="images/pic-5.png" alt="">
+            <img src="images/prakash.jpeg" alt="">
             <div>
-               <h3>john deo</h3>
+               <h3>Prakash Abuj</h3>
                <div class="stars">
                   <i class="fas fa-star"></i>
                   <i class="fas fa-star"></i>
@@ -217,14 +213,14 @@
                </div>
             </div>
          </div>
-         <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Adipisci voluptates delectus distinctio quam sequi error eum suscipit tempore inventore ex!</p>
+         <p>Honestly, FindRoom’s the real deal—found a budget room, favorited it, and sealed the deal with one WhatsApp call!</p>
       </div>
 
       <div class="box">
          <div class="user">
-            <img src="images/pic-6.png" alt="">
+            <img src="images/suraj.jpg" alt="">
             <div>
-               <h3>john deo</h3>
+               <h3>Suraj Gardi</h3>
                <div class="stars">
                   <i class="fas fa-star"></i>
                   <i class="fas fa-star"></i>
@@ -234,7 +230,8 @@
                </div>
             </div>
          </div>
-         <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Adipisci voluptates delectus distinctio quam sequi error eum suscipit tempore inventore ex!</p>
+         <p>एका अनोळखी शहरात पाऊल टाकताना, हवं असतं एक विश्वासाचं ठिकाण...
+            FindRoom हेच ठिकाण आहे</p>
       </div>
 
    </div>

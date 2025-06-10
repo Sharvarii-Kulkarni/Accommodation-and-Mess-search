@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Admin Login</title>
+   <link rel="stylesheet" href="css/style.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+</head>
+<body>
+
+   <header class="header">
+      <nav class="navbar nav-1">
+          <section class="flex">
+              <a href="home.html" class="logo"><i class="fas fa-house"></i>FindRoom</a>
+          </section>
+      </nav>
+      
+      <nav class="navbar nav-2">
+          <section class="flex">
+              <div id="menu-btn" class="fas fa-bars"></div>
+              <div class="menu">
+                  <ul>
+                      <li><a href="#">rent<i class="fas fa-angle-down"></i></a>
+                          <ul>
+                              <li><a href="rent_listings.html?type=flat">Flat</a></li>
+                              <li><a href="rent_listings.html?type=hostel">Hostel</a></li>
+                              <li><a href="rent_listings.html?type=pg">PG</a></li>
+                              <li><a href="rent_listings.html?type=all">All Accommodations</a></li>
+                          </ul>
+                      </li>
+                      <li><a href="#">Mess <i class="fas fa-angle-down"></i></a>
+                          <ul>
+                              <li><a href="mess_listings.html?meal_type=pure veg">Veg</a></li>
+                              <li><a href="mess_listings.html?meal_type=veg/non-veg">Veg/Non-Veg</a></li>
+                              <li><a href="mess_listings.html?meal_type=both">All Mess Services</a></li>
+                          </ul>
+                      </li>
+                      <li><a href="#">help<i class="fas fa-angle-down"></i></a>
+                          <ul>
+                              <li><a href="about.html">about us</a></li>
+                              <li><a href="contact.html">contact us</a></li>
+                              <li><a href="contact.html#faq">FAQ</a></li>
+                          </ul>
+                      </li>
+                  </ul>
+              </div>
+              <ul>
+               <li><a href="saved_listing.html">Favourites <i class="far fa-heart"></i></a></li>
+                  <li><a href="#">account <i class="fas fa-angle-down"></i></a>
+                      <ul>
+                          <li><a href="login.html">login</a></li>
+                          <li><a href="register.html">register</a></li>
+                      </ul>
+                  </li>
+                  <li class="profile-dropdown">
+                      <a href="#"><i class="fas fa-user-circle"></i> Profile <i class="fas fa-angle-down"></i></a>
+                      <ul class="profile-menu">
+                          <li id="user-info">Not logged in</li>
+                          <li><a href="#" id="logout-btn">Logout</a></li>
+                      </ul>
+                  </li>
+                  <li><a href="admin_login.html" class="admin-btn">Admin Login</a></li>
+              </ul>
+          </section>
+      </nav>
+  </header>
+  <!-- Header Section Ends -->
+   
+<section class="form-container">
+   <form id="admin-login-form">
+      <h3>Admin Login</h3>
+      <input type="text" id="admin-username" required placeholder="Enter Username" class="box">
+      <input type="password" id="admin-password" required placeholder="Enter Password" class="box">
+      <p id="error-message" style="color: red; display: none;"></p>
+      <input type="submit" value="Login" class="btn">
+   </form>
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const adminLoginForm = document.querySelector("#admin-login-form");
+    const errorMessage = document.querySelector("#error-message");
+    const maxAttempts = 5;
+    const lockoutDuration = 30 * 60 * 1000; // 30 minutes in milliseconds
+
+    // Load attempt count and lockout status
+    let loginAttempts = parseInt(localStorage.getItem("adminLoginAttempts")) || 0;
+    let lockoutUntil = parseInt(localStorage.getItem("adminLockoutUntil")) || 0;
+
+    // Check if locked out
+    if (lockoutUntil > Date.now()) {
+        const minutesLeft = Math.ceil((lockoutUntil - Date.now()) / 1000 / 60);
+        if (errorMessage) {
+            errorMessage.style.display = "block";
+            errorMessage.textContent = `Too many login attempts. Try again in ${minutesLeft} minutes.`;
+        }
+        if (adminLoginForm) {
+            adminLoginForm.querySelector("input[type='submit']").disabled = true;
+        }
+        return;
+    } else if (lockoutUntil) {
+        // Clear expired lockout
+        localStorage.removeItem("adminLoginAttempts");
+        localStorage.removeItem("adminLockoutUntil");
+        loginAttempts = 0;
+        if (errorMessage) errorMessage.style.display = "none";
+    }
+
+    if (adminLoginForm) {
+        adminLoginForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            // Double-check lockout
+            if (lockoutUntil > Date.now()) {
+                const minutesLeft = Math.ceil((lockoutUntil - Date.now()) / 1000 / 60);
+                if (errorMessage) {
+                    errorMessage.style.display = "block";
+                    errorMessage.textContent = `Too many login attempts. Try again in ${minutesLeft} minutes.`;
+                }
+                return;
+            }
+
+            const username = document.querySelector("#admin-username").value;
+            const password = document.querySelector("#admin-password").value;
+
+            fetch("http://127.0.0.1:5000/admin/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.token) {
+                        // Reset attempts on success
+                        localStorage.removeItem("adminLoginAttempts");
+                        localStorage.removeItem("adminLockoutUntil");
+                        if (errorMessage) errorMessage.style.display = "none";
+                        localStorage.setItem("admin_token", data.token);
+                        window.location.href = "admin_dashboard.html";
+                    } else {
+                        // Increment attempts on failure
+                        loginAttempts++;
+                        localStorage.setItem("adminLoginAttempts", loginAttempts);
+
+                        if (loginAttempts >= maxAttempts) {
+                            lockoutUntil = Date.now() + lockoutDuration;
+                            localStorage.setItem("adminLockoutUntil", lockoutUntil);
+                            if (errorMessage) {
+                                errorMessage.style.display = "block";
+                                errorMessage.textContent = "Too many login attempts. You are locked out for 30 minutes.";
+                            }
+                            adminLoginForm.querySelector("input[type='submit']").disabled = true;
+                        } else {
+                            if (errorMessage) {
+                                errorMessage.style.display = "block";
+                                errorMessage.textContent = `Invalid credentials. ${maxAttempts - loginAttempts} attempts remaining.`;
+                            }
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error("Error during admin login:", error);
+                    // Count network errors as failed attempts
+                    loginAttempts++;
+                    localStorage.setItem("adminLoginAttempts", loginAttempts);
+
+                    if (loginAttempts >= maxAttempts) {
+                        lockoutUntil = Date.now() + lockoutDuration;
+                        localStorage.setItem("adminLockoutUntil", lockoutUntil);
+                        if (errorMessage) {
+                            errorMessage.style.display = "block";
+                            errorMessage.textContent = "Too many login attempts. You are locked out for 30 minutes.";
+                        }
+                        adminLoginForm.querySelector("input[type='submit']").disabled = true;
+                    } else {
+                        if (errorMessage) {
+                            errorMessage.style.display = "block";
+                            errorMessage.textContent = `Something went wrong. ${maxAttempts - loginAttempts} attempts remaining.`;
+                        }
+                    }
+                });
+        });
+    }
+});
+</script>
+
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93012ff379eebf77',t:'MTc0NDYxMjU3MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body>
+</html>

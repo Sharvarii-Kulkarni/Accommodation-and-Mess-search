@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Listings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar nav-1">
+            <section class="flex">
+                <a href="home.html" class="logo"><i class="fas fa-house"></i>FindRoom</a>
+            </section>
+        </nav>
+        <nav class="navbar nav-2">
+            <section class="flex">
+                <div id="menu-btn" class="fas fa-bars"></div>
+                <div class="menu">
+                    <ul>
+                        <li><a href="#">rent<i class="fas fa-angle-down"></i></a>
+                            <ul>
+                                <li><a href="rent_listings.html?type=flat">Flat</a></li>
+                                <li><a href="rent_listings.html?type=hostel">Hostel</a></li>
+                                <li><a href="rent_listings.html?type=pg">PG</a></li>
+                                <li><a href="rent_listings.html?type=all">All Accommodations</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#">Mess <i class="fas fa-angle-down"></i></a>
+                            <ul>
+                                <li><a href="mess_listings.html?meal_type=pure veg">Veg</a></li>
+                                <li><a href="mess_listings.html?meal_type=veg/non-veg">Veg/Non-Veg</a></li>
+                                <li><a href="mess_listings.html?meal_type=both">All Mess Services</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#">help<i class="fas fa-angle-down"></i></a>
+                            <ul>
+                                <li><a href="about.html">about us</a></li>
+                                <li><a href="contact.html">contact us</a></li>
+                                <li><a href="contact.html#faq">FAQ</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <ul>
+                    <li><a href="saved_listing.html">Favourites <i class="far fa-heart"></i></a></li>
+                    <li><a href="#">account <i class="fas fa-angle-down"></i></a>
+                        <ul>
+                            <li><a href="login.html">login</a></li>
+                            <li><a href="register.html">register</a></li>
+                        </ul>
+                    </li>
+                    <li class="profile-dropdown">
+                        <a href="#"><i class="fas fa-user-circle"></i> Profile <i class="fas fa-angle-down"></i></a>
+                        <ul class="profile-menu">
+                            <li id="user-info">Not logged in</li>
+                            <li><a href="#" id="logout-btn">Logout</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="admin_login.html" class="admin-btn">Admin Login</a></li>
+                </ul>
+            </section>
+        </nav>
+    </header>
+
+    <section class="listings">
+        <h1 class="heading">Saved Listings</h1>
+        <div class="box-container" id="saved-listings">
+            <!-- Listings will be populated dynamically -->
+        </div>
+    </section>
+
+    <footer class="footer" style="margin-top: 15%;">
+        <section class="flex">
+            <div class="box">
+                <a href="tel:1234567890"><i class="fas fa-phone"></i><span>123456789</span></a>
+                <a href="tel:1112223333"><i class="fas fa-phone"></i><span>1112223333</span></a>
+                <a href="/cdn-cgi/l/email-protection#82e7fae3eff2eee7c2e5efe3ebeeace1edef"><i class="fas fa-envelope"></i><span><span class="__cf_email__" data-cfemail="6b0e130a061b070e2b0c060a020745080406">[email&#160;protected]</span></span></a>
+                <a href="#"><i class="fas fa-map-marker-alt"></i><span>Pune, India - 4110045</span></a>
+            </div>
+            <div class="box">
+                <a href="home.html"><span>home</span></a>
+                <a href="about.html"><span>about</span></a>
+                <a href="contact.html"><span>contact</span></a>
+                <a href="saved_listings.html"><span>saved listings</span></a>
+            </div>
+            <div class="box">
+                <a href="#"><span>facebook</span><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><span>twitter</span><i class="fab fa-twitter"></i></a>
+                <a href="#"><span>linkedin</span><i class="fab fa-linkedin"></i></a>
+                <a href="#"><span>instagram</span><i class="fab fa-instagram"></i></a>
+            </div>
+        </section>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script src="js/script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const userId = localStorage.getItem("user_id");
+            const container = document.getElementById("saved-listings");
+
+            if (!userId) {
+                window.location.href = "login.html";
+                return;
+            }
+
+            fetch(`http://127.0.0.1:5000/saved_listings?user_id=${userId}`)
+                .then(response => {
+                    if (!response.ok) throw new Error("Failed to fetch saved listings");
+                    return response.json();
+                })
+                .then(data => {
+                    container.innerHTML = ""; // Clear initial content
+                    if (data.length === 0) {
+                        container.innerHTML = "<p>No saved listings found.</p>";
+                    } else {
+                        data.forEach(listing => {
+                            let imageUrl = listing.image_url.startsWith("http") ? listing.image_url : `http://127.0.0.1:5000${listing.image_url}`;
+                            const cost = listing.type === "Accommodation" ? listing.rent_price : listing.price;
+                            const listingHtml = `
+                                <div class="box fade-in">
+                                    <div class="thumb">
+                                        <img src="${imageUrl}" alt="${listing.name}">
+                                    </div>
+                                    <h3 class="name">${listing.name}</h3>
+                                    <p class="location"><i class="fas fa-map-marker-alt"></i> ${listing.location}</p>
+                                    <p class="type">Type: ${listing.type}</p>
+                                    <p class="cost">Cost: ₹${cost !== undefined && cost !== null ? cost : "Not specified"}</p>
+                                    <p class="more-info"><i class="fas fa-info-circle"></i> Click on View Details for more</p>
+                                    <a href="view_${listing.type.toLowerCase()}.html?id=${listing.id}" class="btn">View Details</a>
+                                </div>
+                            `;
+                            container.innerHTML += listingHtml;
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching saved listings:", error);
+                    container.innerHTML = "<p>Something went wrong. Please try again.</p>";
+                });
+        });
+    </script>
+</body>
+</html>

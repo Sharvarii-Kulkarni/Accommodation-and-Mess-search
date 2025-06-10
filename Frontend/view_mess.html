@@ -4,191 +4,539 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mess Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
     <style>
+        /* Same styling as view_accommodation.html */
         body {
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-            margin: 20px;
+            font-family: 'Poppins', Arial, sans-serif;
+            margin: 0;
             padding: 0;
-            background-color: #f8f9fa;
+            background-color: #f4f7fa;
+            color: #333;
         }
 
         .container {
-            max-width: 900px;
-            margin: 20px auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 1100px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
             display: flex;
-            gap: 20px;
-            align-items: flex-start;
+            gap: 30px;
+            flex-wrap: wrap;
         }
 
-        /* Left Side: Image */
         .image-container {
             flex: 1;
-            max-width: 30%;
+            min-width: 300px;
+            max-width: 35%;
         }
 
         .image-container img {
             width: 100%;
-            border-radius: 8px;
+            height: auto;
+            border-radius: 10px;
             object-fit: cover;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
-        /* Right Side: Details */
         .details {
             flex: 2;
+            min-width: 300px;
         }
 
-        /* Title */
         .title {
-            text-align: center;
-            font-size: 28px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 15px;
+            font-size: 32px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: left;
         }
 
-        /* Table Styling */
         .details-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 15px;
+            font-size: 16px;
         }
 
         .details-table td {
-            padding: 10px;
-            vertical-align: middle;
-            border-bottom: 1px solid #ddd;
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
         }
 
         .details-table td:first-child {
-            width: 35%;
-            font-weight: bold;
-            color: #333;
-            white-space: nowrap;
+            width: 30%;
+            font-weight: 600;
+            color: #34495e;
         }
 
         .details-table td i {
-            margin-right: 8px;
+            margin-right: 10px;
+            color: #3498db;
         }
 
         .highlight {
-            font-weight: bold;
-            color: #007bff;
+            font-weight: 700;
+            color: #e74c3c;
         }
 
-        /* Buttons */
         .btn-container {
-            margin-top: 20px;
+            margin-top: 25px;
             display: flex;
-            justify-content: space-between;
-            gap: 10px;
+            gap: 15px;
+            flex-wrap: wrap;
         }
 
         .btn {
             flex: 1;
-            text-align: center;
-            display: inline-block;
-            padding: 10px 16px;
+            padding: 12px 20px;
             font-size: 16px;
-            background: #007bff;
-            color: white;
+            font-weight: 600;
+            background: #3498db;
+            color: #fff;
             text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
+            border-radius: 8px;
+            text-align: center;
+            transition: background 0.3s ease;
         }
 
         .btn:hover {
-            background: #0056b3;
+            background: #2980b9;
+        }
+
+        .login-overlay, .favourite-overlay { /* Changed from save-overlay */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
+        }
+
+        .login-overlay.active, .favourite-overlay.active { /* Changed from save-overlay */
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .login-box, .favourite-box { /* Changed from save-box */
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            transform: translateY(30px);
+            opacity: 0;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+        }
+
+        .login-box.active, .favourite-box.active { /* Changed from save-box */
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .login-icon, .favourite-icon { /* Changed from save-icon */
+            font-size: 50px;
+            color: #3498db;
+            margin-bottom: 20px;
+        }
+
+        .login-title, .favourite-title { /* Changed from save-title */
+            font-size: 26px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .login-message, .favourite-message { /* Changed from save-message */
+            font-size: 16px;
+            color: #7f8c8d;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .login-btn, .confirm-btn {
+            background: #3498db;
+            color: #fff;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .login-btn:hover, .confirm-btn:hover {
+            background: #2980b9;
+        }
+
+        .cancel-btn {
+            background: #e74c3c;
+            color: #fff;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .cancel-btn:hover {
+            background: #c0392b;
+        }
+
+        .blur-content {
+            filter: blur(5px);
+            transition: filter 0.5s ease;
+            pointer-events: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                margin: 20px;
+                padding: 20px;
+            }
+
+            .btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-
-    <h1 class="title">Mess Details</h1>
-
+    <header class="header">
+        <nav class="navbar nav-1">
+            <section class="flex">
+                <a href="home.html" class="logo"><i class="fas fa-house"></i>FindRoom</a>
+            </section>
+        </nav>
+        
+        <nav class="navbar nav-2">
+            <section class="flex">
+                <div id="menu-btn" class="fas fa-bars"></div>
+                <div class="menu">
+                    <ul>
+                        <li><a href="#">rent<i class="fas fa-angle-down"></i></a>
+                            <ul>
+                                <li><a href="rent_listings.html?type=flat">Flat</a></li>
+                                <li><a href="rent_listings.html?type=hostel">Hostel</a></li>
+                                <li><a href="rent_listings.html?type=pg">PG</a></li>
+                                <li><a href="rent_listings.html?type=all">All Accommodations</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#">Mess <i class="fas fa-angle-down"></i></a>
+                            <ul>
+                                <li><a href="mess_listings.html?meal_type=pure veg">Veg</a></li>
+                                <li><a href="mess_listings.html?meal_type=veg/non-veg">Veg/Non-Veg</a></li>
+                                <li><a href="mess_listings.html?meal_type=both">All Mess Services</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#">help<i class="fas fa-angle-down"></i></a>
+                            <ul>
+                                <li><a href="about.html">about us</a></li>
+                                <li><a href="contact.html">contact us</a></li>
+                                <li><a href="contact.html#faq">FAQ</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <ul>
+                    <li><a href="saved_listing.html">Favourites <i class="far fa-heart"></i></a></li>
+                    <li><a href="#">account <i class="fas fa-angle-down"></i></a>
+                        <ul>
+                            <li><a href="login.html">login</a></li>
+                            <li><a href="register.html">register</a></li>
+                        </ul>
+                    </li>
+                    <li class="profile-dropdown">
+                        <a href="#"><i class="fas fa-user-circle"></i> Profile <i class="fas fa-angle-down"></i></a>
+                        <ul class="profile-menu">
+                            <li id="user-info">Not logged in</li>
+                            <li><a href="#" id="logout-btn">Logout</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="admin_login.html" class="admin-btn">Admin Login</a></li>
+                </ul>
+            </section>
+        </nav>
+    </header>
+    <!-- Header Section Ends -->
     <div class="container">
-        <!-- Left Side: Image -->
         <div class="image-container">
             <img id="mess-image" src="" alt="Mess Image">
         </div>
-
-        <!-- Right Side: Details -->
         <div class="details">
-            <h2 id="mess-name"></h2>
+            <h2 class="title" id="mess-name"></h2>
             <table class="details-table">
-                <tr><td><strong>📍 Location:</strong></td><td id="mess-location"></td></tr>
-                <tr><td><strong>🍽️ Meal Type:</strong></td><td id="mess-meal-type"></td></tr>
-                <tr><td><strong>💰 Price:</strong></td><td class="highlight" id="mess-price"></td></tr>
-                <tr><td><strong>📝 Description:</strong></td><td id="mess-description"></td></tr>
-                <tr><td><strong>👤 Owner:</strong></td><td id="mess-owner"></td></tr>
-                <tr><td><strong>📞 Contact:</strong></td><td id="mess-contact"></td></tr>
-                <tr><td><strong>⏰ Timings:</strong></td><td id="mess-timings"></td></tr>
-                <tr><td><strong>📜 Menu:</strong></td><td id="mess-menu"></td></tr>
-                <tr><td><strong>✨ Amenities:</strong></td><td id="mess-amenities"></td></tr>
-                <tr><td><strong>📅 Listed On:</strong></td><td id="mess-listed"></td></tr>
+                <tr><td><i class="fas fa-map-marker-alt"></i>Location:</td><td id="mess-location"></td></tr>
+                <tr><td><i class="fas fa-utensils"></i>Meal Type:</td><td id="mess-meal-type"></td></tr>
+                <tr><td><i class="fas fa-rupee-sign"></i>Price:</td><td class="highlight" id="mess-price"></td></tr>
+                <tr><td><i class="fas fa-file-alt"></i>Description:</td><td id="mess-description"></td></tr>
+                <tr><td><i class="fas fa-user"></i>Owner:</td><td id="mess-owner"></td></tr>
+                <tr><td><i class="fas fa-clock"></i>Timings:</td><td id="mess-timings"></td></tr>
+                <tr><td><i class="fas fa-list"></i>Menu:</td><td id="mess-menu"></td></tr>
+                <tr><td><i class="fas fa-star"></i>Amenities:</td><td id="mess-amenities"></td></tr>
+                <tr><td><i class="fas fa-calendar-alt"></i>Listed On:</td><td id="mess-listed"></td></tr>
             </table>
-
-            <!-- Buttons -->
             <div class="btn-container">
-                <a id="find-map-btn" class="btn" target="_blank">📍 Find in Map</a>
-                <a href="search.html" class="btn">🔙 Back to Search</a>
+                <a id="find-map-btn" class="btn" target="_blank"><i class="fas fa-map"></i> Find in Map</a>
+                <button id="back-btn" class="btn"><i class="fas fa-arrow-left"></i> Back</button>
+                <button id="favourite-btn" class="btn"><i class="far fa-heart"></i> Favourite</button> <!-- Changed from save-btn -->
+                <button id="contact-btn" class="btn"><i class="fab fa-whatsapp"></i> Contact Us</button>
             </div>
         </div>
     </div>
 
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-box">
+            <div class="login-icon"><i class="fas fa-lock"></i></div>
+            <h2 class="login-title">Login Required</h2>
+            <p class="login-message">Please log in to view this mess service's details. Create an account for free to access all features.</p>
+            <button class="login-btn" onclick="window.location.href='login.html'">Click here to Log In</button>
+        </div>
+    </div>
+
+    <div class="favourite-overlay" id="favouriteOverlay"> <!-- Changed from saveOverlay -->
+        <div class="favourite-box"> <!-- Changed from save-box -->
+            <div class="favourite-icon"><i class="far fa-heart"></i></div> <!-- Changed from save-icon -->
+            <h2 class="favourite-title" id="favourite-title">Favourite Mess Service</h2> <!-- Changed from save-title -->
+            <p class="favourite-message" id="favourite-message">Are you sure you want to favourite this mess service?</p> <!-- Changed from save-message -->
+            <button class="confirm-btn" id="confirm-favourite-btn">Confirm</button> <!-- Changed from confirm-save-btn -->
+            <button class="cancel-btn" id="cancel-favourite-btn">Cancel</button> <!-- Changed from cancel-save-btn -->
+        </div>
+    </div>
+
+    <footer class="footer">
+        <section class="flex">
+            <div class="box">
+                <a href="tel:1234567890"><i class="fas fa-phone"></i><span>123456789</span></a>
+                <a href="tel:1112223333"><i class="fas fa-phone"></i><span>1112223333</span></a>
+                <a href="/cdn-cgi/l/email-protection#83e6fbe2eef3efe6c3e4eee2eaefade0ecee"><i class="fas fa-envelope"></i><span><span class="__cf_email__" data-cfemail="2f0a170e021f030a2f08020e0603410c0002">[email protected]</span></span></a>
+                <a href="#"><i class="fas fa-map-marker-alt"></i><span>Pune, India - 4110045</span></a>
+            </div>
+            <div class="box">
+                <a href="home.html"><span>home</span></a>
+                <a href="about.html"><span>about</span></a>
+                <a href="contact.html"><span>contact</span></a>
+                <a href="saved_listings.html"><span>saved listings</span></a>
+            </div>
+            <div class="box">
+                <a href="#"><span>facebook</span><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><span>twitter</span><i class="fab fa-twitter"></i></a>
+                <a href="#"><span>linkedin</span><i class="fab fa-linkedin"></i></a>
+                <a href="#"><span>instagram</span><i class="fab fa-instagram"></i></a>
+            </div>
+        </section>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
     <script>
+        let isFavourited = false;
+    
         document.addEventListener("DOMContentLoaded", function() {
+            const isLoggedIn = checkUserLoginStatus();
+            const favouriteBtn = document.getElementById("favourite-btn");
+            const contactBtn = document.getElementById("contact-btn");
+            const backBtn = document.getElementById("back-btn");
+            const favouriteOverlay = document.getElementById("favouriteOverlay");
+            const favouriteBox = document.querySelector(".favourite-box");
+            const favouriteTitle = document.getElementById("favourite-title");
+            const favouriteMessage = document.getElementById("favourite-message");
+            const confirmBtn = document.getElementById("confirm-favourite-btn");
+            const cancelBtn = document.getElementById("cancel-favourite-btn");
+    
+            if (!isLoggedIn) {
+                document.querySelector(".container").classList.add("blur-content");
+                setTimeout(function() {
+                    document.getElementById("loginOverlay").classList.add("active");
+                    document.querySelector(".login-box").classList.add("active");
+                }, 300);
+                favouriteBtn.style.display = "none";
+                return;
+            }
+    
             const urlParams = new URLSearchParams(window.location.search);
             const messId = urlParams.get("id");
-
+    
             if (!messId) {
                 document.querySelector(".container").innerHTML = "<p style='color: red;'>Invalid request. No ID provided.</p>";
                 return;
             }
-
+    
+            // Check favourited status
+            fetch(`http://127.0.0.1:5000/saved_status?user_id=${localStorage.getItem("user_id")}&mess_id=${messId}`)
+                .then(response => {
+                    if (!response.ok) throw new Error("Failed to check favourited status");
+                    return response.json();
+                })
+                .then(data => {
+                    isFavourited = data.isSaved;
+                    updateFavouriteButton();
+                })
+                .catch(error => console.error("Error checking favourited status:", error));
+    
+            // Fetch mess details
             fetch(`http://127.0.0.1:5000/mess/${messId}`)
                 .then(response => {
-                    if (!response.ok) {
-                        throw new Error("Failed to fetch mess details.");
-                    }
+                    if (!response.ok) throw new Error("Failed to fetch mess details.");
                     return response.json();
                 })
                 .then(data => {
                     if (data.error) {
                         document.querySelector(".container").innerHTML = `<p style='color: red;'>${data.error}</p>`;
                     } else {
-                        document.getElementById("mess-image").src = data.image_url;
+                        let imageUrl = data.image_url.startsWith("http") ? data.image_url : `http://127.0.0.1:5000${data.image_url}`;
+                        document.getElementById("mess-image").src = imageUrl;
                         document.getElementById("mess-name").textContent = data.name;
                         document.getElementById("mess-location").textContent = data.location;
                         document.getElementById("mess-meal-type").textContent = data.meal_type;
                         document.getElementById("mess-price").textContent = `₹${data.price}`;
-                        document.getElementById("mess-description").textContent = data.description;
-                        document.getElementById("mess-owner").textContent = data.owner_name;
-                        document.getElementById("mess-contact").textContent = data.phone_number;
-                        document.getElementById("mess-timings").textContent = data.timings;
-                        document.getElementById("mess-menu").textContent = data.menu;
-                        document.getElementById("mess-amenities").textContent = data.amenities.replace(/\[|\]|"/g, '');
+                        document.getElementById("mess-description").textContent = data.description || "No description available";
+                        document.getElementById("mess-owner").textContent = `${data.owner_name}`;
+                        document.getElementById("mess-timings").textContent = data.timings || "Not specified";
+                        document.getElementById("mess-menu").textContent = data.menu || "Not specified";
+                        document.getElementById("mess-amenities").textContent = data.amenities.replace(/\[|\]|"/g, '') || "None";
                         document.getElementById("mess-listed").textContent = data.listing_date;
-
-                        // Set Google Maps link dynamically
+    
                         const findMapBtn = document.getElementById("find-map-btn");
                         const locationQuery = encodeURIComponent(data.location);
                         findMapBtn.href = `https://www.google.com/maps/search/?api=1&query=${locationQuery}`;
+
+
+                        // WhatsApp Contact Logic
+                        let phoneNumber = '+917066172163'; // Default phone number
+                        const messLink = window.location.href;
+                        const userId = localStorage.getItem("user_id");
+                        let userName = "A User";
+
+                        fetch(`http://127.0.0.1:5000/get_user/${userId}`)
+                            .then(res => res.json())
+                            .then(userData => {
+                                if (!userData.error) {
+                                    userName = userData.name;
+                                }
+                                const message = `Hello! This is *${userName}*.\nI'm interested in this Mess. Here are the details:\n\n` +
+                                    `*Name:* ${data.name}\n` +
+                                    `*Location:* ${data.location}\n` +
+                                    `*Price:* ₹${data.rent_price}\n` +
+                                    `*Link:* ${accommodationLink}\n\n` +
+                                    `Could you please provide more information? Thanks!`;
+                                const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+                                contactBtn.addEventListener("click", function () {
+                                    window.open(whatsappUrl, "_blank");
+                                });
+                            })
+                            .catch(err => {
+                                console.error("Failed to fetch user name for WhatsApp message:", err);
+                            });
                     }
                 })
                 .catch(error => {
                     console.error("Error fetching mess details:", error);
                     document.querySelector(".container").innerHTML = "<p style='color: red;'>Failed to load mess details.</p>";
                 });
+    
+            // Back button functionality
+            backBtn.addEventListener("click", function () {
+                window.history.back();
+            });
+    
+            favouriteBtn.addEventListener("click", function() {
+                document.querySelector(".container").classList.add("blur-content"); // Add blur
+                favouriteOverlay.classList.add("active");
+                favouriteBox.classList.add("active");
+                if (isFavourited) {
+                    favouriteTitle.textContent = "Unfavourite Mess Service";
+                    favouriteMessage.textContent = "Are you sure you want to unfavourite this mess service?";
+                } else {
+                    favouriteTitle.textContent = "Favourite Mess Service";
+                    favouriteMessage.textContent = "Are you sure you want to favourite this mess service?";
+                }
+            });
+    
+            confirmBtn.addEventListener("click", function() {
+                const userId = localStorage.getItem("user_id");
+                if (isFavourited) {
+                    fetch(`http://127.0.0.1:5000/unsave`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ user_id: userId, mess_id: messId })
+                    })
+                    .then(response => {
+                        if (!response.ok) throw new Error("Failed to unfavourite");
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.message) {
+                            isFavourited = false;
+                            updateFavouriteButton();
+                            closeOverlay();
+                            document.querySelector(".container").classList.remove("blur-content"); // Remove blur
+                        } else {
+                            alert(data.error || "Failed to unfavourite");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error unfavouriting:", error);
+                        alert("An error occurred while unfavouriting.");
+                    });
+                } else {
+                    fetch(`http://127.0.0.1:5000/save`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ user_id: userId, mess_id: messId })
+                    })
+                    .then(response => {
+                        if (!response.ok) throw new Error("Failed to favourite");
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.message) {
+                            isFavourited = true;
+                            updateFavouriteButton();
+                            closeOverlay();
+                            document.querySelector(".container").classList.remove("blur-content"); // Remove blur
+                        } else {
+                            alert(data.error || "Failed to favourite");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error favouriting:", error);
+                        alert("An error occurred while favouriting.");
+                    });
+                }
+            });
+    
+            cancelBtn.addEventListener("click", closeOverlay);
+    
+            function updateFavouriteButton() {
+                favouriteBtn.innerHTML = isFavourited ? '<i class="fas fa-heart"></i> Unfavourite' : '<i class="far fa-heart"></i> Favourite';
+            }
+    
+            function closeOverlay() {
+                favouriteOverlay.classList.remove("active");
+                favouriteBox.classList.remove("active");
+                document.querySelector(".container").classList.remove("blur-content"); // Remove blur
+            }
         });
+    
+        function checkUserLoginStatus() {
+            const userId = localStorage.getItem("user_id");
+            return userId !== null;
+        }
     </script>
-
 </body>
 </html>

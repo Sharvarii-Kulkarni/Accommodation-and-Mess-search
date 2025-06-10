@@ -5,10 +5,11 @@
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Search Mess</title>
-   <!-- font awesome cdn link  -->
+
+   <!-- Font Awesome CDN Link -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
 
-   <!-- custom css file link  -->
+   <!-- Custom CSS File Link -->
    <link rel="stylesheet" href="css/style.css">
 
    <style>
@@ -23,94 +24,101 @@
       }
       .filter-form {
          flex: 1;
-         background-color: rgba(255, 255, 255, 0.5); /* Transparent background */
+         background-color: rgba(255, 255, 255, 0.5);
          padding: 20px;
          border-radius: 8px;
-         box-shadow: var(--box-shodow);
+         box-shadow: var(--box-shadow);
       }
       .map-container {
          flex: 1.5;
-         height: 500px;
-         background-color: #e0e0e0;
+         height: 700px;
          border-radius: 8px;
+         overflow: hidden;
+         transform: scale(0.8);
+         opacity: 0;
+         transition: transform 0.8s ease-in-out, opacity 0.8s ease-in-out;
+      }
+      .map-container.loaded {
+         transform: scale(1);
+         opacity: 1;
       }
    </style>
 </head>
 <body>
-   
-<!-- header section starts  -->
-<header class="header">
-   <nav class="navbar nav-1">
-      <section class="flex">
-         <a href="home.html" class="logo"><i class="fas fa-house"></i>FindRoom</a>
-      </section>
-   </nav>
-   <nav class="navbar nav-2">
-      <section class="flex">
-         <div id="menu-btn" class="fas fa-bars"></div>
-         <div class="menu">
-            <ul>
-               <li><a href="#">rent<i class="fas fa-angle-down"></i></a>
-                  <ul>
-                     <li><a href="#">flat</a></li>
-                     <li><a href="#">hostel</a></li>
-                     <li><a href="#">PG</a></li>
-                  </ul>
-               </li>
-               <li><a href="#">mess<i class="fas fa-angle-down"></i></a>
-                  <ul>
-                     <li><a href="#">veg</a></li>
-                     <li><a href="#">veg/non-veg</a></li>
-                  </ul>
-               </li>
-               <li><a href="#">help<i class="fas fa-angle-down"></i></a>
-                  <ul>
-                     <li><a href="about.html">about us</a></i></li>
-                     <li><a href="contact.html">contact us</a></i></li>
-                     <li><a href="contact.html#faq">FAQ</a></i></li>
-                  </ul>
-               </li>
-            </ul>
-         </div>
 
-         <ul>
-            <li><a href="#">saved <i class="far fa-heart"></i></a></li>
-            <li><a href="#">account <i class="fas fa-angle-down"></i></a>
-               <ul>
-                  <li><a href="login.html">login</a></li>
-                  <li><a href="register.html">register</a></li>
-               </ul>
-            </li>
-            <li class="profile-dropdown">
-               <a href="#"><i class="fas fa-user-circle"></i> Profile <i class="fas fa-angle-down"></i></a>
-               <ul class="profile-menu">
-                  <li id="user-info">Not logged in</li>
-                  <li><a href="#" id="logout-btn">Logout</a></li>
-               </ul>
-            </li>
-         </ul>
-      </section>
-   </nav>
-</header>
-<!-- header section ends -->
-
-<!-- Mess Facilities Search -->
+   <header class="header">
+      <nav class="navbar nav-1">
+          <section class="flex">
+              <a href="home.html" class="logo"><i class="fas fa-house"></i>FindRoom</a>
+          </section>
+      </nav>
+      
+      <nav class="navbar nav-2">
+          <section class="flex">
+              <div id="menu-btn" class="fas fa-bars"></div>
+              <div class="menu">
+                  <ul>
+                      <li><a href="#">rent<i class="fas fa-angle-down"></i></a>
+                          <ul>
+                              <li><a href="rent_listings.html?type=flat">Flat</a></li>
+                              <li><a href="rent_listings.html?type=hostel">Hostel</a></li>
+                              <li><a href="rent_listings.html?type=pg">PG</a></li>
+                              <li><a href="rent_listings.html?type=all">All Accommodations</a></li>
+                          </ul>
+                      </li>
+                      <li><a href="#">Mess <i class="fas fa-angle-down"></i></a>
+                          <ul>
+                              <li><a href="mess_listings.html?meal_type=pure veg">Veg</a></li>
+                              <li><a href="mess_listings.html?meal_type=veg/non-veg">Veg/Non-Veg</a></li>
+                              <li><a href="mess_listings.html?meal_type=both">All Mess Services</a></li>
+                          </ul>
+                      </li>
+                      <li><a href="#">help<i class="fas fa-angle-down"></i></a>
+                          <ul>
+                              <li><a href="about.html">about us</a></li>
+                              <li><a href="contact.html">contact us</a></li>
+                              <li><a href="contact.html#faq">FAQ</a></li>
+                          </ul>
+                      </li>
+                  </ul>
+              </div>
+              <ul>
+               <li><a href="saved_listing.html">Favourites <i class="far fa-heart"></i></a></li>
+                  <li><a href="#">account <i class="fas fa-angle-down"></i></a>
+                      <ul>
+                          <li><a href="login.html">login</a></li>
+                          <li><a href="register.html">register</a></li>
+                      </ul>
+                  </li>
+                  <li class="profile-dropdown">
+                      <a href="#"><i class="fas fa-user-circle"></i> Profile <i class="fas fa-angle-down"></i></a>
+                      <ul class="profile-menu">
+                          <li id="user-info">Not logged in</li>
+                          <li><a href="#" id="logout-btn">Logout</a></li>
+                      </ul>
+                  </li>
+                  <li><a href="admin_login.html" class="admin-btn">Admin Login</a></li>
+              </ul>
+          </section>
+      </nav>
+  </header>
+  <!-- Header Section Ends -->
+<!-- Search Form Section -->
 <div class="container">
    <form id="mess-search-form" class="filter-form">
       <h3>Find Mess Facilities</h3>
       <div class="flex">
          <div class="box">
-            <p>Enter location <span>*</span></p>
-            <input type="text" id="mess-location" name="mess-location" required maxlength="50" placeholder="enter city name" class="input">
+            <p>Enter Location <span>*</span></p>
+            <input type="text" id="mess-location" name="mess-location" required maxlength="50" placeholder="Enter city name" class="input">
          </div>
          <div class="box">
             <p>Meal Type <span>*</span></p>
             <select id="meal-type" name="meal-type" class="input" required>
                <option value="pure veg">Pure Veg</option>
                <option value="veg/non-veg">Veg/Non-Veg</option>
-               <option value="both">both</option>
+               <option value="both">Both</option>
             </select>
-            
          </div>
          <div class="box">
             <p>Maximum Budget <span>*</span></p>
@@ -127,17 +135,20 @@
       <button type="submit" id="mess-search-btn" class="btn">Search Mess</button>
    </form>
 
-   <div class="map-container" id="map">
-      <!-- Google Maps will be embedded here -->
-   </div>
+   <div class="map-container" id="map"></div>
 </div>
 
 <section class="listings">
    <h1 class="heading">Searched Results</h1>
-   <div class="box-container" id="mess-search-results">
-      <!-- Mess search results will be displayed here dynamically -->
-   </div>
+   <div class="box-container" id="mess-search-results"></div>
 </section>
+
+<!-- Google Maps API -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDGCYnFzWHzJY7SSdj1YpvxUA-ZPBbbojw&libraries=geometry,directions&callback=initMap" defer></script>
+
+<!-- JavaScript -->
+<script src="js/script.js"></script>
+
 
 <!-- footer section starts  -->
 <footer class="footer">
@@ -164,18 +175,14 @@
 </footer>
 <!-- footer section ends -->
 
-<!-- custom js file link  -->
-<script src="js/script.js"></script>
-
 <script>
-   // Initialize Google Maps
-   function initMap() {
-      const map = new google.maps.Map(document.getElementById("map"), {
-         center: { lat: 18.5204, lng: 73.8567 }, // Pune coordinates
-         zoom: 12,
-      });
-   }
+   document.addEventListener("DOMContentLoaded", function () {
+      const mapElement = document.querySelector(".map-container");
+      if (mapElement) {
+         mapElement.classList.add("loaded");
+      }
+   });
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AlzaSyhnDYTzuANDScfNGz4c_TaKU28uFeJuQdy&callback=initMap" async defer></script>
+
 </body>
 </html>

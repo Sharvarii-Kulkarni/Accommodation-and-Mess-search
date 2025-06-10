@@ -5,55 +5,51 @@
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Home</title>
-
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
    <link rel="stylesheet" href="css/style.css">
-
 </head>
 <body>
    
 <!-- header section starts  -->
-
 <header class="header">
-
    <nav class="navbar nav-1">
       <section class="flex">
          <a href="home.html" class="logo"><i class="fas fa-house"></i>FindRoom</a>
       </section>
    </nav>
-
    <nav class="navbar nav-2">
       <section class="flex">
          <div id="menu-btn" class="fas fa-bars"></div>
-
          <div class="menu">
             <ul>
-               <li><a href="#">rent<i class="fas fa-angle-down"></i></a>
+               <li><a href="#">Rent<i class="fas fa-angle-down"></i></a>
                   <ul>
-                     <li><a href="listings.html">flat</a></li>
-                     <li><a href="listings.html">hostel</a></li>
-                     <li><a href="listings.html">PG</a></li>
+                     <li><a href="rent_listings.html?type=flat">Flat</a></li>
+                     <li><a href="rent_listings.html?type=hostel">Hostel</a></li>
+                     <li><a href="rent_listings.html?type=pg">PG</a></li>
+                     <li><a href="rent_listings.html?type=all">All Accommodations</a></li>
                   </ul>
                </li>
-               <li><a href="#">mess<i class="fas fa-angle-down"></i></a>
+               <li><a href="#">Mess <i class="fas fa-angle-down"></i></a>
                   <ul>
-                     <li><a href="mess_listing.html">veg</a></li>
-                     <li><a href="mess_listing.html">veg/non-veg</a></li>
+                     <li><a href="mess_listings.html?meal_type=pure veg">Veg</a></li>
+                     <li><a href="mess_listings.html?meal_type=veg/non-veg">Veg/Non-Veg</a></li>
+                     <li><a href="mess_listings.html?meal_type=both">All Mess Services</a></li>
                   </ul>
                </li>
-               <li><a href="#">help<i class="fas fa-angle-down"></i></a>
+               <li><a href="#">Help<i class="fas fa-angle-down"></i></a>
                   <ul>
-                     <li><a href="about.html">about us</a></i></li>
-                     <li><a href="contact.html">contact us</a></i></li>
-                     <li><a href="contact.html#faq">FAQ</a></i></li>
+                     <li><a href="about.html">about us</a></li>
+                     <li><a href="contact.html">contact us</a></li>
+                     <li><a href="contact.html#faq">FAQ</a></li>
                   </ul>
                </li>
             </ul>
          </div>
-
+         <div class="menu">
          <ul>
-            <li><a href="#">saved <i class="far fa-heart"></i></a></li>
-            <li><a href="#">account <i class="fas fa-angle-down"></i></a>
+            <li><a href="saved_listing.html">Favourites <i class="far fa-heart"></i></a></li>
+            <li><a href="#">Account <i class="fas fa-angle-down"></i></a>
                <ul>
                   <li><a href="login.html">login</a></li>
                   <li><a href="register.html">register</a></li>
@@ -67,30 +63,27 @@
                </ul>
             </li>            
          </ul>
+      </div>
+      <ul><li><a href="admin_login.html" class="admin-btn">Admin Login</a></li></ul>
       </section>
    </nav>
-
 </header>
-
 <!-- header section ends -->
 
 <!-- home section starts  -->
-
 <div class="home">
-
    <section class="center">
-   <!-- <div class="home-content"> -->
       <div class="home-intro">
          <h1 class="main-quote">"Every new city is a chapter of opportunity"</h1><br><br>
          <h2 class="sub-quote">Pune welcomes you to write your success story</h2><br>
          <p class="intro-para">
-            At XYZ, we believe every journey deserves the perfect beginning. Whether you’re a student eager to embrace Pune’s academic hub or a professional settling into the city’s thriving opportunities, we’ve got you covered. From cozy hostel rooms to dependable mess facilities, we help you find a home that’s more than just four walls—a place to belong.
+            At FindRoom, we believe every journey deserves the perfect beginning. Whether you’re a student eager to embrace Pune’s academic hub or a professional settling into the city’s thriving opportunities, we’ve got you covered. From cozy hostel rooms to dependable mess facilities, we help you find a home that’s more than just four walls—a place to belong.
          </p>
-       </div>
-       <form action="" method="post">
+      </div>
+      <form action="" method="post">
          <h3 style="text-decoration: underline; text-align: center; font-weight: bold; margin-bottom: 10px;">Find Your <br>Accommodation and Mess</h3>
          <br>
-         <h4 class="form-subtitle">You can find your accomodation and mess at your convienient location!</h4>
+         <h4 class="form-subtitle">You can find your accommodation and mess at your convenient location!</h4>
          <div class="flex" id="home-btn">
             <br>
             <input type="submit" value="Search Accommodation" name="search" class="btn" onclick="window.location.href='search.html'; return false;">
@@ -99,196 +92,108 @@
          </div>
       </form>
    </section>
-
 </div>
-
 <!-- home section ends -->
 
 <!-- services section starts  -->
-
 <section class="services">
-
    <h1 class="heading">our services</h1>
-
    <div class="box-container">
-
       <div class="box">
          <img src="images/icon-1.png" alt="">
          <h3>Rent Room</h3>
          <p>Explore a variety of available rooms for rent near your location, with detailed information on each option to help you make an informed decision.</p>
       </div>
-
       <div class="box">
          <img src="images/food_logo3.png" alt="">
          <h3>Find Nearby Mess</h3>
          <p>Easily find nearby mess services offering meals at affordable rates, complete with contact details for booking and inquiries.</p>
       </div>
-
       <div class="box">
          <img src="images/icon-6.png" alt="">
          <h3>24/7 service</h3>
          <p>Get round-the-clock support through ChatBot and assistance for all your accommodation and mess-related queries, available whenever you need it.</p>
       </div>
-
    </div>
-
 </section>
-
 <!-- services section ends -->
 
-<!-- listings section starts  -->
-
+<!-- listings section starts -->
 <section class="listings">
-
    <h1 class="heading">Latest Listings</h1>
-
-   <div class="box-container">
-
-      <div class="box">
-         <div class="admin">
-            <h3>D</h3>
-            <div>
-               <p>Dr. Sangeeta Salvi</p>
-               <span>10-12-2024</span>
-            </div>
-         </div>
-         <div class="thumb">
-            <form action="" method="post" class="save">
-               <button type="submit" name="save" class="far fa-heart"></button>
-            </form>
-            <img src="images/CPS.avif" alt="">
-         </div>
-         <h3 class="name">CPS Hostel, Pune</h3>
-         <p class="location"><i class="fas fa-map-marker-alt"></i><span>Chh. Shivajinagar, Near Metro Station, Pune, india - 411004</span></p>
-         <a href="takelook.html" class="btn">Take a Look</a>
-      </div>
-
-      <div class="box">
-         <div class="admin">
-            <h3>V</h3>
-            <div>
-               <p>Vidhyarthi Sahayyak Samiti</p>
-               <span>10-11-2024</span>
-            </div>
-         </div>
-         <div class="thumb">
-            <form action="" method="post" class="save">
-               <button type="submit" name="save" class="far fa-heart"></button>
-            </form>
-            <img src="images/VDS.png" alt="">
-         </div>
-         <h3 class="name">Vidhyarthi Sahayyak Samiti</h3>
-         <p class="location"><i class="fas fa-map-marker-alt"></i><span>Shivajinagar, Fergusson College Rd., Pune, india - 411004</span></p>
-         <a href="takelook.html" class="btn">Take a Look</a>
-      </div>
-
-      <div class="box">
-         <div class="admin">
-            <h3>A</h3>
-            <div>
-               <p>Adv. Sharvari Kulkarni</p>
-               <span>1-1-2025</span>
-            </div>
-         </div>
-         <div class="thumb">
-            <form action="" method="post" class="save">
-               <button type="submit" name="save" class="far fa-heart"></button>
-            </form>
-            <img src="images/Nilaya.avif" alt="">
-         </div>
-         <h3 class="name">Nilaya Girls and Boys Hostel</h3>
-         <p class="location"><i class="fas fa-map-marker-alt"></i><span>Sadashiv Peth, Pune - 411030</span></p>
-         <a href="takelook.html" class="btn">Take a Look</a>
-      </div>
-
+   <div class="box-container" id="search-results">
+      <!-- Listings will be displayed dynamically -->
    </div>
-   <div style="margin-top: 2rem; text-align:center;">
-      <a href="listings.html" class="inline-btn">view all</a>
-   </div>
-
 </section>
-
 <!-- listings section ends -->
-<!-- footer section starts  -->
 
+<!-- footer section starts  -->
 <footer class="footer">
    <section class="flex">
-
       <div class="box">
          <a href="tel:1234567890"><i class="fas fa-phone"></i><span>123456789</span></a>
          <a href="tel:1112223333"><i class="fas fa-phone"></i><span>1112223333</span></a>
-         <a href="mailto:abc@gmail.com"><i class="fas fa-envelope"></i><span>abc@gmail.com</span></a>
+         <a href="mailto:example@gmail.com"><i class="fas fa-envelope"></i><span>example@gmail.com</span></a>
          <a href="#"><i class="fas fa-map-marker-alt"></i><span>Pune, india - 4110045</span></a>
       </div>
-
       <div class="box">
          <a href="home.html"><span>home</span></a>
          <a href="about.html"><span>about</span></a>
          <a href="contact.html"><span>contact</span></a>
-         <a href="#"><span>saved accomodation</span></a>
+         <a href="saved_listing.html"><span>saved accommodation</span></a>
       </div>
-
       <div class="box">
          <a href="#"><span>facebook</span><i class="fab fa-facebook-f"></i></a>
          <a href="#"><span>twitter</span><i class="fab fa-twitter"></i></a>
          <a href="#"><span>linkedin</span><i class="fab fa-linkedin"></i></a>
          <a href="#"><span>instagram</span><i class="fab fa-instagram"></i></a>
-
       </div>
-
    </section>
-
 </footer>
-
 <!-- footer section ends -->
 
-<!-- custom js file link  -->
-<!-- <script>
+<script>
    document.addEventListener("DOMContentLoaded", function () {
-       const userId = localStorage.getItem("user_id");
-       const userInfo = document.querySelector("#user-info"); 
-       const usernameDisplay = document.querySelector("#username"); 
-       const logoutBtn = document.querySelector("#logout-btn");
+      fetch("http://127.0.0.1:5000/api/listings")
+         .then(response => {
+            if (!response.ok) {
+               throw new Error("Network response was not ok");
+            }
+            return response.json();
+         })
+         .then(data => {
+            const container = document.getElementById("search-results");
+            container.innerHTML = ""; // Clear initial content
 
-       // Fetch user details when the page loads
-       if (userId) {
-           fetch(`http://127.0.0.1:5000/get_user/${userId}`)
-               .then(response => response.json())
-               .then(data => {
-                   if (data.error) {
-                       userInfo.textContent = "Error fetching user";
-                   } else {
-                       userInfo.innerHTML = `<strong>${data.name}</strong><br>${data.email}`;
-                       if (usernameDisplay) {
-                           usernameDisplay.textContent = data.name;
-                       }
-                   }
-               })
-               .catch(error => {
-                   console.error("Error fetching user:", error);
-                   userInfo.textContent = "Error loading user";
+            if (data.length === 0) {
+               container.innerHTML = "<p>No results found.</p>";
+            } else {
+               data.forEach(acc => {
+                  let imageUrl = acc.image_url.startsWith("http") ? acc.image_url : `http://127.0.0.1:5000${acc.image_url}`;
+
+                  const listing = `
+                     <div class="box fade-in">
+                        <div class="thumb">
+                           <img src="${imageUrl}" alt="${acc.name}" style="width:250px; height:auto; border-radius:5px;">
+                        </div>
+                        <h3 class="name">${acc.name}</h3>
+                        <p class="location"><i class="fas fa-map-marker-alt"></i> ${acc.location}</p>
+                        <p class="type">Type: ${acc.type}</p>
+                        <p class="price">Price: ₹${acc.rent_price}</p>
+                        <p class="description">${acc.description}</p>
+                        <a href="view_accommodation.html?id=${acc.id}" class="btn">View Details</a>
+                     </div>
+                  `;
+                  container.innerHTML += listing;
                });
-       } else {
-           userInfo.textContent = "Not logged in";
-       }
-
-       // Logout functionality
-       if (logoutBtn) {
-           logoutBtn.addEventListener("click", function (event) {
-               event.preventDefault();
-               localStorage.removeItem("user_id"); // Clear session
-               alert("Logged out successfully!");
-               window.location.href = "login.html"; // Redirect to login
-           });
-       }
+            }
+         })
+         .catch(error => {
+            console.error("Error fetching listings:", error);
+            document.getElementById("search-results").innerHTML = "<p>Something went wrong. Please try again.</p>";
+         });
    });
-</script> -->
-
-
+</script>
 <script src="js/script.js"></script>
-
-<h2>Welcome, <span id="username"></span>!</h2>
-
-
 </body>
 </html>
